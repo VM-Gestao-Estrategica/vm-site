@@ -1,0 +1,389 @@
+:root {
+  --brand-blue: #0f2747;
+  --brand-gold: #c9a034;
+  --text: #0b0b0b;
+  --muted: #666;
+  --bg: #ffffff;
+  --ring: rgba(15, 39, 71, 0.2);
+  --shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+* { box-sizing: border-box; }
+html, body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: "Noto Sans", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.container {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 32px 20px 48px;
+  display: grid;
+  gap: 24px;
+  align-items: start;
+}
+
+/* Layout wrapper */
+.layout {
+  display: block; /* mobile: single column */
+}
+.left-panel {
+  display: none; /* hidden on mobile */
+}
+.left-panel img {
+  display: block;
+  height: 100vh;
+  width: auto;
+  object-fit: contain;
+}
+.right-panel {
+  display: block;
+}
+
+.brand {
+  display: flex;
+  justify-content: center;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.brand__logo {
+  height: 55px;
+  width: auto;
+}
+
+.intro {
+  text-align: center;
+  display: grid;
+  gap: 12px;
+}
+.intro__title {
+  font-size: clamp(20px, 3.2vw, 28px);
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: 0.2px;
+  color: var(--brand-blue);
+}
+.intro__desc {
+  margin: 0 auto;
+  max-width: 760px;
+  font-size: clamp(14px, 2.2vw, 18px);
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.actions {
+  display: grid;
+  gap: 12px;
+}
+
+/* Desktop: create airy layout and optional two-column for large screens */
+@media (min-width: 920px) {
+  /* Desktop split: left image + right content */
+  .layout {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    min-height: 100vh;
+  }
+  .left-panel {
+    display: block;
+    /* ensure the column width follows the intrinsic width of the image at 100vh height */
+    background: #fff;
+  }
+  .right-panel {
+    display: flex;
+  }
+  .right-panel .container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .actions {
+    grid-template-columns: 1fr 1fr;
+  }
+  .actions .btn:nth-child(odd):last-child {
+    grid-column: span 2;
+  }
+
+  /* Increase header logo size by 6% on desktop */
+  .brand__logo {
+    height: calc(55px * 1.06); /* 58.3px */
+  }
+
+  /* Align intro text to left on desktop */
+  .intro {
+    text-align: left;
+  }
+  .intro__desc {
+    margin: 0;
+  }
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  justify-content: center;
+  text-decoration: none;
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1;
+  transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease, color 120ms ease, border-color 120ms ease;
+  border: 1px solid transparent;
+  will-change: transform;
+}
+.btn__icon {
+  display: inline-flex;
+  align-items: center;
+  color: currentColor;
+}
+
+/* Primary hierarchy */
+.btn--primary {
+  background: var(--brand-blue);
+  color: #fff;
+  box-shadow: var(--shadow);
+}
+.btn--primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.10);
+}
+.btn--primary:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow);
+}
+
+/* Outline variant */
+.btn--outline {
+  background: #fff;
+  color: var(--brand-blue);
+  border-color: rgba(15, 39, 71, 0.25);
+}
+.btn--outline:hover {
+  background: #f7f9fc;
+}
+
+/* Ghost variant for brand-consistent secondary primaries */
+.btn--ghost {
+  background: #fff;
+  color: var(--brand-blue);
+  border-color: transparent;
+}
+.btn--ghost:hover {
+  background: #f9fafb;
+}
+
+/* Secondary social icons row */
+.socials {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding-top: 4px;
+}
+.iconbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--brand-blue);
+  background: #fff;
+  border: 1px solid rgba(15, 39, 71, 0.15);
+  box-shadow: var(--shadow);
+  transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease, border-color 120ms ease;
+}
+.iconbtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.10);
+  background: #f7f9fc;
+}
+
+/* Focus rings for accessibility */
+.btn:focus-visible,
+.iconbtn:focus-visible,
+.footer a:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px var(--ring);
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .iconbtn {
+    transition: none;
+  }
+}
+
+/* ==========================================================================
+   Main Site Footer Styles (Ported)
+   ========================================================================== */
+
+:root {
+    --navy: #0d2c54;
+    --gold: #c9a44c;
+    --white: #ffffff;
+    --gray: #4a4a4a;
+    --aqua: #00d4aa;
+}
+
+.footer {
+    background: var(--navy);
+    color: var(--white);
+    padding: 4rem 0 2rem;
+    display: block; /* Override any previous display settings */
+    margin-top: auto;
+    width: 100%;
+}
+
+/* Reset container for footer specifically if needed, but main container class is reused.
+   The main .container in this file has grid display.
+   The footer html has <div class="container">. 
+   We should probably let it inherit the grid but we need to be careful.
+   The footer structure in HTML is:
+   footer > container > footer-content (grid)
+   
+   If .container here is display: grid, and footer-content is inside it, it should be fine.
+*/
+
+.footer .container {
+    max-width: 1200px; /* Match main site */
+    display: block; /* Reset to block for footer's internal layout if needed, or keep grid?
+                       The main site uses display:block (default) for container usually, but here it is grid.
+                       Let's check styles.css: .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; } (Block)
+                       Here .container { display: grid; ... }
+                       We should probably reset it for the footer to avoid issues.
+                    */
+    display: block;
+    padding: 0 2rem;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-logo {
+    height: 55px;
+    width: auto;
+    margin-bottom: 1rem;
+}
+
+.footer-col h4 {
+    color: var(--white);
+    font-size: 1rem;
+    margin-bottom: 1.25rem;
+    font-weight: 600;
+    margin-top: 0;
+}
+
+.footer-slogan {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.footer-social {
+    display: flex;
+    gap: 1rem;
+}
+
+.footer-social a {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.footer-social a:hover {
+    background: var(--gold);
+    transform: translateY(-3px);
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
+    margin-bottom: 0.75rem;
+}
+
+.footer-links a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s ease;
+    border-bottom: none; /* Override previous footer a styles */
+}
+
+.footer-links a:hover {
+    color: var(--gold);
+    border-color: transparent;
+}
+
+.footer-bottom {
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.footer-bottom p {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0;
+}
+
+.footer-dev a {
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-dev a:hover {
+    color: var(--aqua);
+}
+
+@media (max-width: 968px) {
+    .footer-content {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .footer-col.footer-brand {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-content {
+        grid-template-columns: 1fr;
+    }
+}

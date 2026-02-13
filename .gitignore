@@ -1,0 +1,45 @@
+# Arquivos de ambiente
+.env
+.env.local
+.env.*.local
+
+# Arquivo de configuração gerado - NÃO commitar credenciais
+sdk/config.js
+
+# Credenciais e informações sensíveis
+credenciais/
+*.secret
+*.key
+*credentials*
+*acess*
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependências
+node_modules/
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Build
+dist/
+build/
+
+# Arquivos temporários
+*.tmp
+*.temp
+
+# Local Netlify folder
+.netlify

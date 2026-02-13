@@ -1,0 +1,26 @@
+{
+  "name": "voigt-consultoria-blog",
+  "version": "1.0.0",
+  "description": "Blog da Voigt Consultoria Empresarial com integração Supabase",
+  "scripts": {
+    "dev": "netlify dev",
+    "build:config": "node scripts/build-config.js",
+    "setup": "node scripts/build-config.js",
+    "verify": "node scripts/verify-setup.js",
+    "create-env": "node scripts/create-env.js"
+  },
+  "keywords": [
+    "blog",
+    "supabase",
+    "netlify"
+  ],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "devDependencies": {
+    "dotenv": "^17.3.1",
+    "netlify-cli": "^21.6.0"
+  }
+}
