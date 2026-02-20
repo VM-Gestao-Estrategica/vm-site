@@ -1,4 +1,4 @@
-// Dados Fictícios - Grupo VM - Gestão Empresarial
+// Dados Fictícios - VM Gestão Estratégica - Gestão Empresarial
 
 const dadosGrupoVM = {
   // Equipe
@@ -104,6 +104,36 @@ const dadosGrupoVM = {
   ],
 
 
+  // Blog Mock para Desenvolvimento
+  blog: [
+    {
+      id: 1,
+      titulo: "As principais mudanças tributárias para 2026",
+      resumo: "Entenda como as novas regulamentações podem impactar o planejamento fiscal da sua empresa e como se preparar.",
+      categoria: "Tributário",
+      data: "10 Jan 2026",
+      imagem: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=800&q=80",
+      slug: "mudancas-tributarias-2026"
+    },
+    {
+      id: 2,
+      titulo: "Gestão de Passivos: Estratégias de Recuperação",
+      resumo: "Como identificar créditos acumulados e transformar passivos tributários em fluxo de caixa para sua operação.",
+      categoria: "Gestão",
+      data: "15 Jan 2026",
+      imagem: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=800&q=80",
+      slug: "gestao-de-passivos"
+    },
+    {
+      id: 3,
+      titulo: "Direito Bancário para Médias e Grandes Empresas",
+      resumo: "A importância da revisão contratual em operações de crédito estruturadas e financiamentos de longo prazo.",
+      categoria: "Jurídico",
+      data: "20 Jan 2026",
+      imagem: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80",
+      slug: "direito-bancario-empresarial"
+    }
+  ]
 };
 
 // Export para uso global

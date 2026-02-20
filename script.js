@@ -19,20 +19,8 @@ window.addEventListener('unhandledrejection', (event) => {
 // Add shadow to nav on scroll
 let lastScroll = 0;
 
-window.addEventListener('scroll', () => {
-    const nav = document.querySelector('.nav');
-    const sobreSection = document.getElementById('sobre');
+// O scroll dinâmico agora é gerenciado pelo main.js para funcionar em todas as páginas
 
-    if (nav && sobreSection) {
-        const sobreTop = sobreSection.getBoundingClientRect().top;
-        // Ativa quando o topo da sessão "Sobre" chega no topo do header (70px)
-        if (sobreTop <= 70) {
-            nav.classList.add('scrolled');
-        } else {
-            nav.classList.remove('scrolled');
-        }
-    }
-});
 
 // Smooth scroll for all anchor links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -154,7 +142,7 @@ function loadTeam() {
         const brandBlock = document.createElement('div');
         brandBlock.className = 'team-brand-block';
         brandBlock.innerHTML = `
-            <div class="logo-text">Grupo<span>VM</span></div>
+            <div class="logo-text">VM<span> Gestão Estratégica</span></div>
             <p>Excelência Jurídica</p>
         `;
 
@@ -189,8 +177,11 @@ async function loadBlog() {
     }
 
     // Pega os 3 posts mais recentes
-    const recentPosts = Array.isArray(posts) ? posts.slice(0, 3) : [];
+    let recentPosts = Array.isArray(posts) ? posts.slice(0, 3) : [];
+
+    // Limpa e prepara o container
     blogGrid.innerHTML = '';
+    blogGrid.className = 'blog-list';
 
     if (recentPosts.length === 0) {
         blogGrid.innerHTML = '<p>Nenhum artigo publicado recentemente.</p>';
@@ -198,42 +189,35 @@ async function loadBlog() {
     }
 
     recentPosts.forEach(post => {
-        const blogCard = document.createElement('a'); // Alterado para tag <a>
-        blogCard.className = 'blog-card';
-        // Corrigindo a URL para o formato com hash, conforme solicitado
+        const blogRow = document.createElement('a');
+        blogRow.className = 'blog-row';
         if (post.slug) {
-            blogCard.href = `/blog-post/#${post.slug}`;
+            blogRow.href = `/blog-post/?post=${post.slug}`;
         }
 
-        const tags = post.tags || [];
-        const tagsHTML = tags.map(tag => `<span class="blog-tag">${tag}</span>`).join('');
         const formattedDate = new Date(post.data_publicacao).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+        const categoryName = post.categoria && post.categoria.nome ? post.categoria.nome : 'Blog';
 
         let imageUrl = post.imagem_url;
-        // Validação da URL da imagem
         if (!imageUrl || (!imageUrl.startsWith('http') && !imageUrl.startsWith('assets'))) {
-            imageUrl = null; // Invalida a URL se não for um link externo ou um asset local
+            imageUrl = null;
         }
 
-        const categoryName = post.categoria && post.categoria.nome ? post.categoria.nome : 'Sem Categoria';
-
-        // Usa a URL completa se for externa, ou monta o caminho absoluto se for local
         const imageSrc = imageUrl ? (imageUrl.startsWith('http') ? imageUrl : `/${imageUrl}`) : null;
-        const imageHTML = imageSrc ? `<img src="${imageSrc}" alt="${post.titulo}" class="blog-image">` : '<div class="blog-image-placeholder"></div>';
+        const imageHTML = imageSrc ? `<div class="blog-row-image"><img src="${imageSrc}" alt="${post.titulo}"></div>` : '';
 
-        blogCard.innerHTML = `
-            ${imageHTML}
-            <div class="blog-content">
-                <div class="blog-meta">
-                    <span class="blog-category">${categoryName}</span>
-                    <span>•</span>
-                    <span>${formattedDate}</span>
+        blogRow.innerHTML = `
+            <div class="blog-row-content">
+                <span class="section-tag">${categoryName}</span>
+                <h3>${post.titulo}</h3>
+                <p class="excerpt">${post.resumo}</p>
+                <div class="read-more">
+                    Ler artigo completo
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </div>
-                <h3 class="blog-title">${post.titulo}</h3>
-                <p class="blog-excerpt">${post.resumo}</p>
-                <div class="blog-tags">${tagsHTML}</div>
-            </div>`;
-        blogGrid.appendChild(blogCard);
+            </div>
+            ${imageHTML}`;
+        blogGrid.appendChild(blogRow);
     });
 }
 

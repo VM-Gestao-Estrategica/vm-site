@@ -22,45 +22,44 @@ document.addEventListener('DOMContentLoaded', async () => {
             blogGrid.innerHTML = '<p>Nenhum artigo encontrado.</p>';
             return;
         }
+
+        // Mudando o container para lista
+        blogGrid.className = 'blog-list';
+
         posts.forEach(post => {
-            blogGrid.appendChild(createPostCard(post));
+            blogGrid.appendChild(createPostRow(post));
         });
     }
 
-    function createPostCard(post) {
-        const card = document.createElement('a'); // Alterado para tag <a>
-        card.className = 'blog-card';
-        // Corrigindo a URL para o formato com hash, e o caminho relativo
+    function createPostRow(post) {
+        const row = document.createElement('a');
+        row.className = 'blog-row';
         if (post.slug) {
-            card.href = `../blog-post/#${post.slug}`;
+            row.href = `../blog-post/?post=${post.slug}`;
         }
 
-        // Usando o campo correto 'data_publicacao'
         const formattedDate = new Date(post.data_publicacao).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
-        
+        const categoryName = post.categoria && post.categoria.nome ? post.categoria.nome : 'Blog';
+
         let imageUrl = post.imagem_url;
-        // Validação da URL da imagem
         if (!imageUrl || (!imageUrl.startsWith('http') && !imageUrl.startsWith('assets'))) {
             imageUrl = null;
         }
 
-        const categoryName = post.categoria && post.categoria.nome ? post.categoria.nome : 'Sem Categoria';
-        
-        // Usa a URL completa se for externa, ou monta o caminho relativo se for local
         const imageSrc = imageUrl ? (imageUrl.startsWith('http') ? imageUrl : `../${imageUrl}`) : null;
-        const imageHTML = imageSrc ? `<img src="${imageSrc}" alt="${post.titulo}" class="blog-image">` : '<div class="blog-image-placeholder"></div>';
+        const imageHTML = imageSrc ? `<div class="blog-row-image"><img src="${imageSrc}" alt="${post.titulo}"></div>` : '';
 
-        card.innerHTML = `
-            ${imageHTML}
-            <div class="blog-content">
-                <div class="blog-meta">
-                    <span class="blog-category">${categoryName}</span>
-                    <span>•</span>
-                    <span>${formattedDate}</span>
+        row.innerHTML = `
+            <div class="blog-row-content">
+                <span class="section-tag">${categoryName}</span>
+                <h2>${post.titulo}</h2>
+                <p class="excerpt">${post.resumo}</p>
+                <div class="read-more">
+                    Ler artigo completo
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </div>
-                <h3 class="blog-title">${post.titulo}</h3>
-                <p class="blog-excerpt">${post.resumo}</p>
-            </div>`;
-        return card;
+            </div>
+            ${imageHTML}`;
+        return row;
     }
 });

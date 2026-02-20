@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     // Função para carregar componentes HTML reutilizáveis
     const loadComponent = (elementId, url, callback) => {
         fetch(url)
@@ -44,14 +44,24 @@ function initializeMobileNav() {
         });
     }
 
-    // Add shadow to nav on scroll - This part can stay if the '.nav' element is part of the header
-    if (nav) {
-        window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 50) {
-                nav.classList.add('scrolled');
-            } else {
+    // Lógica para Header Sólido vs Transparente (Global)
+    const hasHero = document.querySelector('.hero');
+
+    const handleScroll = () => {
+        if (window.scrollY > 25) {
+            nav.classList.add('scrolled');
+        } else {
+            // Só remove o 'scrolled' se houver um hero na página.
+            if (hasHero) {
                 nav.classList.remove('scrolled');
+            } else {
+                nav.classList.add('scrolled');
             }
-        });
+        }
+    };
+
+    if (nav) {
+        handleScroll(); // Estado Inicial
+        window.addEventListener('scroll', handleScroll, { passive: true });
     }
 }
