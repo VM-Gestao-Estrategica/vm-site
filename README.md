@@ -1,6 +1,6 @@
-# 🏢 Voigt Consultoria Empresarial - Blog
+# 🏢 VM Gestão Estratégica - Site Corporativo
 
-Blog corporativo com integração Supabase para gerenciamento de conteúdo.
+Site institucional com integração completa ao Supabase para gerenciamento de conteúdo (Blog), Serviços e Leads de Contato.
 
 ## 🔒 Segurança Implementada
 
@@ -56,12 +56,15 @@ Este projeto utiliza **variáveis de ambiente** para armazenar credenciais do Su
 projeto/
 ├── sdk/
 │   ├── config.js          # Configuração gerada (não editar manualmente em produção)
-│   └── blog-supabase.js   # SDK do blog
+│   ├── blog-supabase.js   # SDK do blog
+│   ├── contact-supabase.js # SDK de contato (RPC)
+│   └── services-supabase.js # SDK de serviços (Schema business)
 ├── scripts/
 │   ├── build-config.js    # Script que gera config.js
 │   └── verify-setup.js    # Script de verificação
 ├── blog/                  # Página de listagem do blog
 ├── blog-post/             # Página de post individual
+├── servicos/              # Página de serviços completos (dinâmica)
 ├── .env                   # Variáveis de ambiente (local, não commitado)
 ├── ENV-EXAMPLE.txt        # Template de exemplo
 ├── netlify.toml           # Configuração do Netlify

@@ -1,7 +1,7 @@
 {
-  "name": "voigt-consultoria-blog",
+  "name": "vm-gestao-estrategica-blog",
   "version": "1.0.0",
-  "description": "Blog da Voigt Consultoria Empresarial com integração Supabase",
+  "description": "Blog da VM Gestão Estratégica com integração Supabase",
   "scripts": {
     "dev": "netlify dev",
     "build:config": "node scripts/build-config.js",

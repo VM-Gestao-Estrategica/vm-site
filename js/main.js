@@ -48,10 +48,16 @@ function initializeMobileNav() {
     const hasHero = document.querySelector('.hero');
 
     const handleScroll = () => {
+        // Se for tablet ou mobile (<= 992px), o header deve ser sempre sólido
+        if (window.innerWidth <= 992) {
+            nav.classList.add('scrolled');
+            return;
+        }
+
         if (window.scrollY > 25) {
             nav.classList.add('scrolled');
         } else {
-            // Só remove o 'scrolled' se houver um hero na página.
+            // Só remove o 'scrolled' se houver um hero na página e for Desktop
             if (hasHero) {
                 nav.classList.remove('scrolled');
             } else {
@@ -63,5 +69,6 @@ function initializeMobileNav() {
     if (nav) {
         handleScroll(); // Estado Inicial
         window.addEventListener('scroll', handleScroll, { passive: true });
+        window.addEventListener('resize', handleScroll); // Garante ajuste se a tela redimensionar
     }
 }

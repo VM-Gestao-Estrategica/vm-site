@@ -64,6 +64,7 @@ document.querySelectorAll('.value-item, .practice-item, .contact-method').forEac
 document.addEventListener('DOMContentLoaded', () => {
     if (typeof dadosGrupoVM !== 'undefined') {
         loadServices();
+        setupServiceFilters();
         loadTeam();
         loadBlog();
     }
@@ -80,20 +81,76 @@ document.addEventListener('DOMContentLoaded', () => {
             telefoneInput.addEventListener('keydown', handlePhoneKeydown);
         }
     }
+
+    // Check for filter in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const filterParam = urlParams.get('filter');
+    if (filterParam && (filterParam === 'tributario' || filterParam === 'bancario')) {
+        setTimeout(() => {
+            const filterBtn = document.querySelector(`.filter-btn[data-filter="${filterParam}"]`);
+            if (filterBtn) {
+                filterBtn.click();
+            }
+        }, 300); // Small delay to ensure items are loaded
+    }
 });
 
 // Load Services
-function loadServices() {
+async function loadServices(filter = 'todos') {
     const servicesGrid = document.getElementById('servicesGrid');
-    if (!servicesGrid || !dadosGrupoVM.servicos) return;
+    if (!servicesGrid) return;
 
-    dadosGrupoVM.servicos.forEach(servico => {
+    // Adiciona classe de loading em vez de limpar o HTML
+    servicesGrid.classList.add('loading');
+
+    let services = [];
+    try {
+        // Tenta buscar da API do Supabase
+        if (window.servicesAPI && typeof window.servicesAPI.getServices === 'function') {
+            const apiServices = await window.servicesAPI.getServices();
+            if (apiServices && apiServices.length > 0) {
+                services = apiServices.map(s => ({
+                    id: s.id,
+                    titulo: s.nome,
+                    descricao: s.descricao || 'Sem descrição disponível.',
+                    detalhes: s.detalhes || [],
+                    categoria: s.categoria || 'tributario',
+                    icone: s.icone || '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5z"/></svg>'
+                }));
+            } else {
+                services = dadosGrupoVM.servicos;
+            }
+        } else {
+            services = dadosGrupoVM.servicos;
+        }
+    } catch (error) {
+        console.error("Erro ao carregar serviços via API:", error);
+        services = dadosGrupoVM.servicos;
+    }
+
+    if (!services || services.length === 0) {
+        servicesGrid.innerHTML = '<p>Nenhum serviço disponível no momento.</p>';
+        servicesGrid.classList.remove('loading');
+        return;
+    }
+
+    const filteredServices = filter === 'todos'
+        ? services
+        : services.filter(s => s.categoria === filter);
+
+    // Renderiza o novo conteúdo
+    const fragment = document.createDocumentFragment();
+    filteredServices.forEach(servico => {
         const serviceCard = document.createElement('div');
-        serviceCard.className = 'service-card';
+        serviceCard.className = 'service-card fade-in';
+        serviceCard.style.borderRadius = '0'; // Força roundness 0
 
-        const detailsHTML = servico.detalhes.map(detalhe =>
-            `<li>${detalhe}</li>`
-        ).join('');
+        const detailsHTML = (servico.detalhes && servico.detalhes.length > 0)
+            ? servico.detalhes.map(detalhe => `<li>${detalhe}</li>`).join('')
+            : '<li>Consulte nossos especialistas para mais detalhes.</li>';
+
+        const encodedMsg = encodeURIComponent(`Olá! Quero saber mais sobre ${servico.titulo} (Vim pela seção de serviços do site)`);
+        const waLink = `https://wa.me/5551996353096?text=${encodedMsg}`;
 
         serviceCard.innerHTML = `
             <span class="service-icon">${servico.icone}</span>
@@ -102,9 +159,45 @@ function loadServices() {
             <ul class="service-details">
                 ${detailsHTML}
             </ul>
+            <a href="${waLink}" target="_blank" class="service-link">
+                Saiba mais
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
         `;
+        fragment.appendChild(serviceCard);
+    });
 
-        servicesGrid.appendChild(serviceCard);
+    // Limpa e aplica o fragmento de uma vez
+    setTimeout(() => {
+        servicesGrid.innerHTML = '';
+        servicesGrid.appendChild(fragment);
+        servicesGrid.classList.remove('loading');
+    }, 100);
+}
+
+// Setup Filters
+function setupServiceFilters() {
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Update active states
+            filterBtns.forEach(b => {
+                b.classList.remove('active', 'border-azul-acao', 'text-azul-acao');
+                b.classList.add('border-gray-200', 'text-gray-500');
+            });
+            btn.classList.add('active', 'border-azul-acao', 'text-azul-acao');
+            btn.classList.remove('border-gray-200', 'text-gray-500');
+
+            // Filter
+            const filter = btn.getAttribute('data-filter');
+            loadServices(filter);
+
+            // Clean URL filter without reloading the page
+            if (window.location.pathname.includes('/servicos/')) {
+                const newUrl = window.location.pathname;
+                window.history.replaceState({}, document.title, newUrl);
+            }
+        });
     });
 }
 

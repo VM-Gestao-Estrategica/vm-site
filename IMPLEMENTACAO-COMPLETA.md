@@ -29,15 +29,13 @@ Toda a configuração de segurança foi implementada com sucesso! A aplicação 
 
 ### 2. ✅ Arquivos Modificados
 
-#### SDK do Blog
-- **`sdk/blog-supabase.js`**
-  - ❌ Removidas credenciais hardcoded
-  - ✅ Implementada leitura de `window.SUPABASE_CONFIG`
-  - ✅ Adicionada validação de segurança
-  - ✅ Mensagens de erro informativas
+#### SDKs Adicionais
+- **`sdk/contact-supabase.js`** - Gerencia envios de formulário de contato via RPC
+- **`sdk/services-supabase.js`** - Gerencia a listagem dinâmica de serviços do schema `business`
 
 #### Arquivos HTML
-- **`index.html`** - Adicionado carregamento de `config.js` antes de `blog-supabase.js`
+- **`index.html`** - Adicionado carregamento de `config.js`, `contact-supabase.js` e `services-supabase.js` antes de `script.js`
+- **`servicos/index.html`** - Adicionado suporte para listagem dinâmica de serviços com filtros
 - **`blog/index.html`** - Adicionado carregamento de `config.js` antes de `blog-supabase.js`
 - **`blog-post/index.html`** - Adicionado carregamento de `config.js` antes de `blog-supabase.js`
 
@@ -151,12 +149,20 @@ projeto/
 
 A aplicação está **100% configurada** e pronta para deploy seguro no Netlify!
 
-### Próximos Passos:
+## 💼 Integrações de Negócio (Schema: business)
 
-1. **Para desenvolvimento:** Crie o arquivo `.env` e execute `npm run build:config`
-2. **Para produção:** Configure as variáveis no Netlify e faça o deploy
+### 📞 Formulário de Contato
+- **Tabela:** `business.vm_contato_site`
+- **Método:** RPC `public.enviar_contato` (Função PL/pgSQL com Security Definer)
+- **Campos:** `nome`, `email`, `telefone`, `empresa`, `assunto`, `mensagem`, `status`
+- **Rastreio:** Status automático definido como `'novo'` para triagem inicial.
+
+### 🛠️ Gestão de Serviços
+- **Tabela:** `business.servicos`
+- **Acesso:** Leitura direta via `.schema('business')` no SDK.
+- **Destaque:** Carregamento dinâmico com filtros inteligentes na página de serviços.
 
 ---
 
-**Implementação concluída em:** $(Get-Date -Format "dd/MM/yyyy HH:mm")
+**Implementação concluída em:** 27/02/2026 17:50
 

@@ -6,22 +6,22 @@
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 <!-- A URL base deve ser substituída pela URL de produção final -->
 <url>
-  <loc>https://www.grupovm.com.br/</loc>
+  <loc>https://www.vmgestaoestrategica.com.br/</loc>
   <lastmod>2025-01-01</lastmod>
   <priority>1.00</priority>
 </url>
 <url>
-  <loc>https://www.grupovm.com.br/blog/</loc>
+  <loc>https://www.vmgestaoestrategica.com.br/blog/</loc>
   <lastmod>2025-01-01</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://www.grupovm.com.br/politica-de-privacidade/</loc>
+  <loc>https://www.vmgestaoestrategica.com.br/politica-de-privacidade/</loc>
   <lastmod>2025-01-01</lastmod>
   <priority>0.50</priority>
 </url>
 <url>
-  <loc>https://www.grupovm.com.br/termos-de-uso/</loc>
+  <loc>https://www.vmgestaoestrategica.com.br/termos-de-uso/</loc>
   <lastmod>2025-01-01</lastmod>
   <priority>0.50</priority>
 </url>
@@ -32,7 +32,7 @@
   ou através de um script no processo de build para incluir todos os posts.
   Exemplo:
   <url>
-    <loc>https://www.grupovm.com.br/blog-post/#slug-do-post-1</loc>
+    <loc>https://www.vmgestaoestrategica.com.br/blog-post/#slug-do-post-1</loc>
     <lastmod>2025-01-01</lastmod>
     <priority>0.64</priority>
   </url>

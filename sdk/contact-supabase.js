@@ -1,37 +1,29 @@
 // sdk/contact-supabase.js
 
-// 1. Configuração do Cliente Supabase
-// As credenciais são carregadas do arquivo config.js que deve ser incluído antes deste script
-// Usa o cliente Supabase compartilhado se já existir, ou cria um novo
-
-// Verifica se a configuração foi carregada
-if (!window.SUPABASE_CONFIG) {
-    console.error('❌ Erro: SUPABASE_CONFIG não encontrado. Certifique-se de que config.js está sendo carregado antes deste script.');
-    throw new Error('SUPABASE_CONFIG não está disponível. Verifique se config.js está incluído no HTML.');
+// 1. Função Auxiliar para Verificação Interna
+function checkSupabaseConfig() {
+    if (!window.SUPABASE_CONFIG || !window.SUPABASE_CONFIG.url || !window.SUPABASE_CONFIG.anonKey) {
+        console.warn('⚠️ Supabase não configurado corretamente. Verifique sdk/config.js.');
+        return false;
+    }
+    return true;
 }
-
-// Validação das credenciais
-if (!window.SUPABASE_CONFIG.url || !window.SUPABASE_CONFIG.anonKey) {
-    console.error('❌ Erro: Credenciais do Supabase incompletas em SUPABASE_CONFIG.');
-    throw new Error('Credenciais do Supabase não configuradas corretamente.');
-}
-
-// Usa a função global getSupabaseClient definida em config.js
 
 // 2. Função para Enviar Solicitação de Contato
 async function submitContactForm(formData) {
     try {
+        if (!checkSupabaseConfig()) {
+            throw new Error('Configuração do Supabase ausente.');
+        }
+
         // Validação dos campos obrigatórios
         if (!formData.nome || !formData.email || !formData.telefone || !formData.assunto || !formData.mensagem) {
             throw new Error('Campos obrigatórios não preenchidos.');
         }
 
-        // Obtém o cliente Supabase compartilhado
         const supabase = window.getSupabaseClient();
-        
-        // Insere os dados na tabela solicitacoes_contato do schema business
-        // Usando RPC porque o schema business não está exposto diretamente via REST API
-        // A função RPC 'enviar_contato' está no schema public e insere no schema business
+
+        // Chama a RPC
         const { data, error } = await supabase.rpc('enviar_contato', {
             p_nome: formData.nome,
             p_email: formData.email,
@@ -42,13 +34,19 @@ async function submitContactForm(formData) {
         });
 
         if (error) {
-            console.error('Erro ao enviar solicitação de contato:', error);
+            console.error('Erro de conexão/RPC:', error);
             throw error;
+        }
+
+        // Verifica se a função interna do SQL retornou erro
+        if (data && data.success === false) {
+            console.error('Erro interno na função SQL:', data.error);
+            throw new Error(data.error || 'Falha ao processar contato no banco.');
         }
 
         return { success: true, data };
     } catch (error) {
-        console.error('Erro na requisição de contato:', error);
+        console.error('Erro na requisição contato:', error);
         throw error;
     }
 }
