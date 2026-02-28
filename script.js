@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Check for filter in URL
     const urlParams = new URLSearchParams(window.location.search);
     const filterParam = urlParams.get('filter');
-    if (filterParam && (filterParam === 'tributario' || filterParam === 'bancario')) {
+    if (filterParam && (filterParam === 'tributario' || filterParam === 'bancario' || filterParam === 'preventivo')) {
         setTimeout(() => {
             const filterBtn = document.querySelector(`.filter-btn[data-filter="${filterParam}"]`);
             if (filterBtn) {
