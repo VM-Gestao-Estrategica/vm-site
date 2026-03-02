@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página não encontrada | VM Gestão Estratégica</title>
+
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-W58QSRSH');</script>
+
+    <!-- Meta Tags -->
+    <meta name="robots" content="noindex, follow">
+    <link rel="icon" href="/assets/identidade-visual/favicon/favicon.ico" sizes="32x32">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'azul-vm': '#5A8BD4',
+                        'azul-executivo': '#0F172A',
+                        'azul-acao': '#3B82F6',
+                        'fundo-secundario': '#F3F4F6',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Lexend', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="/styles.css">
+
+    <style>
+        .error-page {
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 100px 20px;
+            background: var(--bg-white);
+        }
+
+        .error-code {
+            font-size: 8rem;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1;
+            margin-bottom: 20px;
+            font-family: 'Lexend', sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+
+<body>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W58QSRSH" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe></noscript>
+
+    <div id="header-placeholder"></div>
+
+    <main class="error-page">
+        <div class="container">
+            <div class="error-code">404</div>
+            <h1 class="text-3xl md:text-4xl font-bold text-azul-executivo mb-6">Ops! Página não encontrada</h1>
+            <p class="text-lg text-slate-600 mb-10 max-w-xl mx-auto">
+                O conteúdo que você está procurando pode ter sido removido, renomeado ou está temporariamente
+                indisponível.
+            </p>
+            <a href="/"
+                class="btn-primary inline-block px-8 py-3 rounded-none font-bold text-white transition-all transform hover:scale-105">
+                Voltar para a página inicial
+            </a>
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <!-- Scripts -->
+    <script src="/dadosficticios.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/js/main.js"></script>
+</body>
+
+</html>

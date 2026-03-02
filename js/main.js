@@ -1,10 +1,12 @@
 document.addEventListener("DOMContentLoaded", function () {
     // Função para carregar componentes HTML reutilizáveis
     const loadComponent = (elementId, url, callback) => {
-        fetch(url)
+        // Garante que o caminho seja absoluto em relação à raiz do site
+        const absoluteUrl = url.startsWith('/') ? url : `/${url}`;
+        fetch(absoluteUrl)
             .then(response => {
                 if (!response.ok) {
-                    throw new Error(`Não foi possível carregar o componente: ${url}`);
+                    throw new Error(`Não foi possível carregar o componente: ${absoluteUrl}`);
                 }
                 return response.text();
             })
@@ -23,12 +25,112 @@ document.addEventListener("DOMContentLoaded", function () {
     // Carregar cabeçalho e, em seguida, inicializar o menu de navegação
     loadComponent("header-placeholder", "/templates/_header.html", () => {
         initializeMobileNav();
+        initializeGlobalSearch();
         // Carrega os contatos após o header (que pode ter contatos)
         if (typeof dadosGrupoVM !== 'undefined') {
             loadContacts();
         }
     });
+
+    // Carregar rodapé
+    loadComponent("footer-placeholder", "/templates/_footer.html");
 });
+
+function initializeGlobalSearch() {
+    const trigger = document.querySelector('.search-trigger');
+    const overlay = document.querySelector('.search-overlay');
+    const closeBtn = document.querySelector('.search-close');
+    const searchInput = document.getElementById('globalSearchInput');
+    const resultsList = document.getElementById('globalSearchResults');
+
+    if (!trigger || !overlay || !closeBtn || !searchInput) return;
+
+    // Função auxiliar para normalizar strings (remover acentos)
+    const normalize = (str) => {
+        return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    };
+
+    const openSearch = () => {
+        overlay.classList.add('active');
+        // Pequeno delay para garantir que o input já está visível para ganhar foco
+        setTimeout(() => searchInput.focus(), 300);
+        document.body.style.overflow = 'hidden';
+    };
+
+    const closeSearch = () => {
+        overlay.classList.remove('active');
+        searchInput.value = '';
+        resultsList.innerHTML = '';
+        document.body.style.overflow = '';
+    };
+
+    trigger.addEventListener('click', openSearch);
+    closeBtn.addEventListener('click', closeSearch);
+
+    // Fechar com ESC
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && overlay.classList.contains('active')) {
+            closeSearch();
+        }
+    });
+
+    // Lógica de Busca
+    searchInput.addEventListener('input', (e) => {
+        const queryRaw = e.target.value.trim();
+        const termNormalized = normalize(queryRaw);
+
+        resultsList.innerHTML = '';
+
+        if (queryRaw.length < 1) {
+            resultsList.style.display = 'none';
+            return;
+        }
+
+        const results = [];
+        if (typeof dadosGrupoVM !== 'undefined' && dadosGrupoVM.scopos) {
+            dadosGrupoVM.scopos.forEach(scopo => {
+                // Busca no Nome do Scopo
+                if (normalize(scopo.nome_scopo).includes(termNormalized)) {
+                    results.push({ type: 'Escopo', title: scopo.nome_scopo, slug: scopo.slug, item: '' });
+                }
+
+                // Busca nos Serviços Individuais
+                if (scopo.servicos) {
+                    scopo.servicos.forEach(servico => {
+                        if (normalize(servico).includes(termNormalized)) {
+                            results.push({ type: scopo.nome_scopo, title: servico, slug: scopo.slug, item: servico });
+                        }
+                    });
+                }
+            });
+        }
+
+        if (results.length > 0 || queryRaw.length >= 2) {
+            resultsList.style.display = 'block';
+
+            if (results.length > 0) {
+                results.forEach(res => {
+                    const item = document.createElement('div');
+                    item.className = 'search-result-item';
+                    item.innerHTML = `
+                        <div class="res-type">${res.type}</div>
+                        <div class="res-title">${res.title}</div>
+                    `;
+                    item.addEventListener('mousedown', (e) => e.preventDefault());
+                    item.addEventListener('click', () => {
+                        const searchUrl = `/servicos/?filter=${res.slug}${res.item ? '&search=' + encodeURIComponent(res.item) : ''}`;
+                        window.location.href = searchUrl;
+                    });
+                    resultsList.appendChild(item);
+                });
+            } else if (queryRaw.length >= 2) {
+                resultsList.innerHTML = '<div class="search-no-results">Nenhum serviço encontrado.</div>';
+            }
+        } else {
+            resultsList.style.display = 'none';
+        }
+    });
+}
 
 // Configuração de Contatos Dinâmicos
 function loadContacts() {

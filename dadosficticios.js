@@ -18,7 +18,7 @@ const dadosGrupoVM = {
       nome: "Leandro Souza Mendonça",
       cargo: "CLO - Diretor Jurídico",
       foto: "/assets/equipe/leandro-souza-mendonca.jpeg",
-      descricao: "Especialista em Direito Bancário e área cível, com mais de 15 anos de experiência. Lidera a equipe técnica e garante a excelência na entrega dos serviços.",
+      descricao: "Especialista em Advocacia Cível, com mais de 10 anos de atuação nas áreas bancária e jurídica. Lidera a equipe técnica, supervisiona estratégias e padroniza processos para garantir a excelência na entrega aos clientes.",
       email: "leandromendonca@vmgestaoestrategica.com.br",
       whatsapp: "5551984538987",
       linkedin: "https://www.linkedin.com/company/vmgestaoestrategica/",
@@ -26,74 +26,90 @@ const dadosGrupoVM = {
     }
   ],
 
-  // Serviços
-  servicos: [
+  // Scopos (Novos dados de serviços e áreas)
+  scopos: [
     {
-      id: 1,
-      titulo: "Recuperação de Créditos",
-      descricao: "Recupere impostos pagos indevidamente e melhore o fluxo de caixa.",
-      detalhes: [
-        "Identificação de Créditos Acumulados",
-        "Recuperação de Tributos Federais e Estaduais",
-        "Compensação Tributária Estratégica",
-        "Revisão de Bases de Cálculo"
+      nome_scopo: "Gestão Tributária",
+      slug: "tributario",
+      areas: [
+        "Revisão da dívida ativa",
+        "Parcelamentos e Transações",
+        "Contencioso Tributário",
+        "Defesa e Recursos"
       ],
-      categoria: "tributario",
-      icone: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm-1.25 11.48c.88.42 1.95.14 2.52-.63.57-.77.42-1.85-.34-2.45-.75-.6-1.83-.45-2.4.32-.57.77-.42 1.85.34 2.45zM4 12c0 1.57.46 3.03 1.24 4.26L3.78 17.74C3.25 16.03 3 14.01 3 12c0-4.42 3.58-8 8-8v3l4-4-4-4v3c-4.42 0-8 3.58-8 8zm9 0c0 .55-.45 1-1 1s-1-.45-1-1 .45-1 1-1 1 .45 1 1z"/></svg>'
+      servicos: [
+        "Defesa e Recurso",
+        "Receita Federal",
+        "Secretaria da Fazenda Estadual",
+        "Prefeitura",
+        "Regularização Fiscal Estratégica",
+        "Levantamento de débitos",
+        "Diagnóstico de risco",
+        "Estratégia de parcelamento",
+        "Pedido de transação tributária",
+        "Revisão de multa e juros",
+        "Diagnóstico Fiscal Estratégico",
+        "Revisão fiscal e Compliance",
+        "Transação Tributária",
+        "Planejamento Tributário Preventivo",
+        "Revisão estratégica de regime tributário",
+        "Defesa de IRPF em Malha Fina",
+        "Regularização de CPF com pendência fiscal",
+        "Parcelamento e negociação de dívida ativa",
+        "Procuradoria-Geral da Fazenda Nacional",
+        "Dívida ativa estadual",
+        "Municipal",
+        "Diagnóstico Fiscal Estratégico em 7 dias",
+        "Defesa Administrativa Especializada",
+        "Recuperação de Tributos Pagos Indevidamente"
+      ],
+      icone: '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8z" /></svg>'
     },
     {
-      id: 2,
-      titulo: "Defesa e Recursos",
-      descricao: "Proteja-se contra autuações fiscais e cobranças indevidas.",
-      detalhes: [
-        "Defesa de Autos de Infração",
-        "Recursos Administrativos (CARF, TIT)",
-        "Contencioso Tributário Judicial",
-        "Ações Anulatórias de Débito"
+      nome_scopo: "Gestão Bancária",
+      slug: "bancario",
+      areas: [
+        "Gestão Preventiva de Contratos Garantidos",
+        "Auditoria Financeira de Operações Bancárias",
+        "Reorganização Financeira e Plano Administrativo de Endividamento",
+        "Gestão de Ocorrências Bancárias e Compliance Operacional"
       ],
-      categoria: "tributario",
-      icone: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>'
+      servicos: [
+        "DEFESA EM AÇÕES DE BUSCA E APREENSÃO DE VEÍCULO",
+        "REVISIONAL DE FINANCIAMENTO DE VEÍCULOS",
+        "REVISIONAL DE FINANCIAMENTO IMOBILIÁRIO",
+        "AÇÃO DE RESCISÃO CONTRATUAL DE FINANCIAMENTO IMOBILIÁRIO",
+        "DESBLOQUEIO DE VALORES (PF e PJ)",
+        "DEFESA EM EXECUÇÃO DE TÍTULO EXTRAJUDICIAL (EXECUÇÕES BANCÁRIAS)",
+        "SUPERENDIVIDAMENTO (Lei 14.181/2021)"
+      ],
+      icone: '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18" /><path d="M3 10h18" /><path d="M5 6l7-3 7 3" /><path d="M4 10v11" /><path d="M20 10v11" /><path d="M8 14v3" /><path d="M12 14v3" /><path d="M16 14v3" /></svg>'
     },
     {
-      id: 3,
-      titulo: "Gestão Bancária & Dívidas",
-      descricao: "Proteção contra abusividades bancárias e reorganização financeira.",
-      detalhes: [
-        "Defesa em Busca e Apreensão de Veículos",
-        "Revisionais de Financiamento",
-        "Desbloqueio de Valores (SISBAJUD)",
-        "Lei do Superendividamento"
+      nome_scopo: "Consultoria Preventiva",
+      slug: "preventivo",
+      areas: [
+        "Planejamento Tributário",
+        "Revisão Fiscal e Compliance",
+        "Gestão fiscal recorrente",
+        "Diagnóstico Estratégico"
       ],
-      categoria: "bancario",
-      icone: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 10h3v7H4zm6.5 0h3v7h-3zM2 19h20v3H2zm15-9h3v7h-3zm-5-9L2 6v2h20V6z"/></svg>'
-    },
-    {
-      id: 4,
-      titulo: "Planejamento Tributário",
-      descricao: "Reduza sua carga tributária de forma legal e estratégica.",
-      detalhes: [
+      servicos: [
+        "Planejamento Tributário",
         "Diagnóstico Fiscal Estratégico",
         "Planejamento Tributário Preventivo",
         "Reestruturação Societária",
-        "Holding Familiar e Patrimonial"
-      ],
-      categoria: "preventivo",
-      icone: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>'
-    },
-    {
-      id: 5,
-      titulo: "Compliance & Revisão",
-      descricao: "Evite riscos e otimize sua tributação com conformidade total.",
-      detalhes: [
+        "Holding Familiar e Patrimonial",
+        "Compliance & Revisão",
         "Revisão Fiscal e Compliance",
         "Auditoria de Obrigações Acessórias",
         "Parcelamentos e Transações (PGFN)",
         "Regularização de CPF e Malha Fina"
       ],
-      categoria: "preventivo",
-      icone: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>'
+      icone: '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z" /></svg>'
     }
   ],
+
   // Contatos de Atendimento
   contatos: {
     geral: {

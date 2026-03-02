@@ -12,10 +12,42 @@
             <a href="/blog/">Blog</a>
             <a href="/#contato" class="nav-cta">Contato</a>
         </div>
-        <button class="nav-toggle" aria-label="Menu">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
+
+        <div class="nav-actions">
+            <!-- Botão de Busca -->
+            <button class="search-trigger" aria-label="Abrir Busca">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </button>
+
+            <button class="nav-toggle" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+
+        <!-- Search Overlay -->
+        <div class="search-overlay">
+            <div class="search-overlay-container">
+                <div class="search-input-wrapper">
+                    <input type="text" id="globalSearchInput" placeholder="O que você está procurando?"
+                        autocomplete="off">
+                    <button class="search-close" aria-label="Fechar Busca">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+                <div id="globalSearchResults" class="search-results-list">
+                    <!-- Resultados aparecerão aqui -->
+                </div>
+            </div>
+        </div>
     </div>
 </nav>

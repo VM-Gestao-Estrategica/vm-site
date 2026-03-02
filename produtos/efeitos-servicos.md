@@ -32,3 +32,11 @@ Aplicado na seção `.services-page-section`.
 ## Histórico de Decisões
 - **Data:** 27 de Fevereiro de 2026.
 - **Ação:** Documentação dos efeitos para futura referência visual e remoção dos estilos ativos para simplificar a interface conforme solicitado pelo usuário.
+
+
+
+## IMAGEM DO BLO
+
+TIP
+
+Dica para o Cloudinary: Embora o site já faça o ajuste visual, para economizar banda e garantir a melhor qualidade, você pode configurar o Cloudinary para entregar a imagem já nesse formato adicionando os parâmetros c_fill,ar_2:1,w_2240 na URL que você cadastra no banco de dados.

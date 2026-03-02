@@ -82,107 +82,167 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Check for filter in URL
+    // Check for search input
+    const serviceSearch = document.getElementById('serviceSearch');
+
+    // Check for search in URL
     const urlParams = new URLSearchParams(window.location.search);
     const filterParam = urlParams.get('filter');
-    if (filterParam && (filterParam === 'tributario' || filterParam === 'bancario' || filterParam === 'preventivo')) {
+    const searchParam = urlParams.get('search');
+
+    if (serviceSearch && searchParam) {
+        serviceSearch.value = searchParam;
+    }
+
+    if (serviceSearch) {
+        serviceSearch.addEventListener('input', (e) => {
+            const currentFilter = document.querySelector('.filter-btn.active').getAttribute('data-filter');
+            loadServices(currentFilter, e.target.value);
+        });
+    }
+
+    // Inicializa carregamento (se houver filtro/busca na URL)
+    if (filterParam || searchParam) {
         setTimeout(() => {
-            const filterBtn = document.querySelector(`.filter-btn[data-filter="${filterParam}"]`);
+            const currentFilter = filterParam || 'todos';
+            const currentSearch = searchParam || '';
+
+            // Ativa o botão de filtro correto
+            const filterBtn = document.querySelector(`.filter-btn[data-filter="${currentFilter}"]`);
             if (filterBtn) {
-                filterBtn.click();
+                document.querySelectorAll('.filter-btn').forEach(b => {
+                    b.classList.remove('active', 'border-azul-acao', 'text-azul-acao');
+                    b.classList.add('border-gray-200', 'text-gray-500');
+                });
+                filterBtn.classList.add('active', 'border-azul-acao', 'text-azul-acao');
+                filterBtn.classList.remove('border-gray-200', 'text-gray-500');
             }
-        }, 300); // Small delay to ensure items are loaded
+
+            loadServices(currentFilter, currentSearch);
+        }, 300);
     }
 });
 
 // Load Services
-async function loadServices(filter = 'todos') {
+async function loadServices(filter = 'todos', searchTerm = '') {
     const servicesGrid = document.getElementById('servicesGrid');
     if (!servicesGrid) return;
 
-    // Adiciona classe de loading em vez de limpar o HTML
-    servicesGrid.classList.add('loading');
+    // Se estiver na Home, não aplicamos busca (não tem o input)
+    const isServicesPage = window.location.pathname.includes('/servicos/');
 
-    let services = [];
-    try {
-        // Tenta buscar da API do Supabase
-        if (window.servicesAPI && typeof window.servicesAPI.getServices === 'function') {
-            const apiServices = await window.servicesAPI.getServices();
-            if (apiServices && apiServices.length > 0) {
-                services = apiServices.map(s => ({
-                    id: s.id,
-                    titulo: s.nome,
-                    descricao: s.descricao || 'Sem descrição disponível.',
-                    detalhes: s.detalhes || [],
-                    categoria: s.categoria || 'tributario',
-                    icone: s.icone || '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5z"/></svg>'
-                }));
-            } else {
-                services = dadosGrupoVM.servicos;
-            }
-        } else {
-            services = dadosGrupoVM.servicos;
-        }
-    } catch (error) {
-        console.error("Erro ao carregar serviços via API:", error);
-        services = dadosGrupoVM.servicos;
+    // Na home não usamos loading state para não piscar
+    if (isServicesPage) servicesGrid.classList.add('loading');
+
+    let scopos = [];
+    if (typeof dadosGrupoVM !== 'undefined' && dadosGrupoVM.scopos) {
+        scopos = dadosGrupoVM.scopos;
     }
 
-    if (!services || services.length === 0) {
+    if (!scopos || scopos.length === 0) {
         servicesGrid.innerHTML = '<p>Nenhum serviço disponível no momento.</p>';
-        servicesGrid.classList.remove('loading');
+        if (isServicesPage) servicesGrid.classList.remove('loading');
         return;
     }
 
-    const filteredServices = filter === 'todos'
-        ? services
-        : services.filter(s => s.categoria === filter);
-
-    // Renderiza o novo conteúdo
     const fragment = document.createDocumentFragment();
-    filteredServices.forEach(servico => {
-        const serviceCard = document.createElement('div');
-        serviceCard.className = 'service-card fade-in';
-        serviceCard.style.borderRadius = '0'; // Força roundness 0
+    const normalizedTerm = searchTerm.toLowerCase().trim();
 
-        const detailsHTML = (servico.detalhes && servico.detalhes.length > 0)
-            ? servico.detalhes.map(detalhe => `<li>${detalhe}</li>`).join('')
-            : '<li>Consulte nossos especialistas para mais detalhes.</li>';
+    if (isServicesPage) {
+        // PÁGINA DE SERVIÇOS: Um card para cada item individual
+        let hasResults = false;
 
-        const encodedMsg = encodeURIComponent(`Olá! Quero saber mais sobre ${servico.titulo} (Vim pela seção de serviços do site)`);
+        scopos.forEach(scopo => {
+            // Filtro por Categoria (Slug)
+            if (filter !== 'todos' && scopo.slug !== filter) return;
 
-        // Seleciona o número baseado na categoria do serviço
-        let numBase = (dadosGrupoVM.contatos && dadosGrupoVM.contatos.geral) ? dadosGrupoVM.contatos.geral.numero : "5551993917403";
-        if (dadosGrupoVM.contatos) {
-            if (servico.categoria === 'bancario' && dadosGrupoVM.contatos.bancario) {
-                numBase = dadosGrupoVM.contatos.bancario.numero;
-            } else if (servico.categoria === 'tributario' && dadosGrupoVM.contatos.tributario) {
-                numBase = dadosGrupoVM.contatos.tributario.numero;
-            }
+            scopo.servicos.forEach(servicoIndividual => {
+                // Filtro por Busca Textual
+                if (searchTerm && !servicoIndividual.toLowerCase().includes(normalizedTerm)) {
+                    return;
+                }
+
+                hasResults = true;
+                const card = document.createElement('div');
+                card.className = 'service-card individual-service fade-in';
+                card.style.borderRadius = '0';
+
+                const encodedMsg = encodeURIComponent(`Olá! Quero saber mais sobre o serviço: ${servicoIndividual} (Scopo: ${scopo.nome_scopo})`);
+
+                let numBase = (dadosGrupoVM.contatos && dadosGrupoVM.contatos.geral) ? dadosGrupoVM.contatos.geral.numero : "5551993917403";
+                if (dadosGrupoVM.contatos) {
+                    if (scopo.slug === 'bancario' && dadosGrupoVM.contatos.bancario) {
+                        numBase = dadosGrupoVM.contatos.bancario.numero;
+                    } else if (scopo.slug === 'tributario' && dadosGrupoVM.contatos.tributario) {
+                        numBase = dadosGrupoVM.contatos.tributario.numero;
+                    }
+                }
+
+                const waLink = `https://wa.me/${numBase.startsWith('55') ? numBase : '55' + numBase}?text=${encodedMsg}`;
+
+                card.innerHTML = `
+                    <span class="service-icon">${scopo.icone}</span>
+                    <span class="section-tag">${scopo.nome_scopo}</span>
+                    <h3>${servicoIndividual}</h3>
+                    <div class="mt-auto">
+                        <a href="${waLink}" target="_blank" class="service-link">
+                            Solicitar Diagnóstico
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </a>
+                    </div>
+                `;
+                fragment.appendChild(card);
+            });
+        });
+
+        if (!hasResults) {
+            const noResults = document.createElement('div');
+            noResults.className = 'col-span-full py-12 text-center text-gray-500 font-medium';
+            noResults.textContent = 'Nenhum serviço encontrado para sua busca.';
+            fragment.appendChild(noResults);
         }
+    } else {
+        // HOME: Agrupado por Escopo com as 'areas' principais
+        const filteredScopos = filter === 'todos' ? scopos : scopos.filter(s => s.slug === filter);
 
-        const waLink = `https://wa.me/${numBase.startsWith('55') ? numBase : '55' + numBase}?text=${encodedMsg}`;
+        filteredScopos.forEach(scopo => {
+            const card = document.createElement('div');
+            card.className = 'service-card fade-in';
+            card.style.borderRadius = '0';
 
-        serviceCard.innerHTML = `
-            <span class="service-icon">${servico.icone}</span>
-            <h3>${servico.titulo}</h3>
-            <p class="service-description">${servico.descricao}</p>
-            <ul class="service-details">
-                ${detailsHTML}
-            </ul>
-            <a href="${waLink}" target="_blank" class="service-link">
-                Saiba mais
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
-        `;
-        fragment.appendChild(serviceCard);
-    });
+            const itemsHTML = scopo.areas.map(item => `<li>${item}</li>`).join('');
+            const encodedMsg = encodeURIComponent(`Olá! Quero saber mais sobre ${scopo.nome_scopo} (Vim pela Home do site)`);
 
-    // Limpa e aplica o fragmento de uma vez
+            let numBase = (dadosGrupoVM.contatos && dadosGrupoVM.contatos.geral) ? dadosGrupoVM.contatos.geral.numero : "5551993917403";
+            if (dadosGrupoVM.contatos) {
+                if (scopo.slug === 'bancario' && dadosGrupoVM.contatos.bancario) {
+                    numBase = dadosGrupoVM.contatos.bancario.numero;
+                } else if (scopo.slug === 'tributario' && dadosGrupoVM.contatos.tributario) {
+                    numBase = dadosGrupoVM.contatos.tributario.numero;
+                }
+            }
+
+            const waLink = `https://wa.me/${numBase.startsWith('55') ? numBase : '55' + numBase}?text=${encodedMsg}`;
+
+            card.innerHTML = `
+                <span class="service-icon">${scopo.icone}</span>
+                <h3>${scopo.nome_scopo}</h3>
+                <ul class="service-details">
+                    ${itemsHTML}
+                </ul>
+                <a href="${waLink}" target="_blank" class="service-link">
+                    Saiba mais
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            `;
+            fragment.appendChild(card);
+        });
+    }
+
     setTimeout(() => {
         servicesGrid.innerHTML = '';
         servicesGrid.appendChild(fragment);
-        servicesGrid.classList.remove('loading');
+        if (isServicesPage) servicesGrid.classList.remove('loading');
     }, 100);
 }
 
@@ -201,7 +261,9 @@ function setupServiceFilters() {
 
             // Filter
             const filter = btn.getAttribute('data-filter');
-            loadServices(filter);
+            const searchInput = document.getElementById('serviceSearch');
+            const searchTerm = searchInput ? searchInput.value : '';
+            loadServices(filter, searchTerm);
 
             // Clean URL filter without reloading the page
             if (window.location.pathname.includes('/servicos/')) {
@@ -252,11 +314,15 @@ function loadTeam() {
 
         if (index === 0) {
             // Linha 1: Marca, Foto Nathalia, Info Nathalia
+            photoBlock.classList.add('nathalia-photo');
+            infoBlock.classList.add('nathalia-info');
             teamGrid.appendChild(brandBlock);
             teamGrid.appendChild(photoBlock);
             teamGrid.appendChild(infoBlock);
         } else {
             // Linha 2: Info Leandro, Foto Leandro, Marca (Inverte para o checkerboard)
+            photoBlock.classList.add('leandro-photo');
+            infoBlock.classList.add('leandro-info');
             teamGrid.appendChild(infoBlock);
             teamGrid.appendChild(photoBlock);
             teamGrid.appendChild(brandBlock.cloneNode(true));
