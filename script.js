@@ -150,7 +150,18 @@ async function loadServices(filter = 'todos') {
             : '<li>Consulte nossos especialistas para mais detalhes.</li>';
 
         const encodedMsg = encodeURIComponent(`Olá! Quero saber mais sobre ${servico.titulo} (Vim pela seção de serviços do site)`);
-        const waLink = `https://wa.me/5551996353096?text=${encodedMsg}`;
+
+        // Seleciona o número baseado na categoria do serviço
+        let numBase = (dadosGrupoVM.contatos && dadosGrupoVM.contatos.geral) ? dadosGrupoVM.contatos.geral.numero : "5551993917403";
+        if (dadosGrupoVM.contatos) {
+            if (servico.categoria === 'bancario' && dadosGrupoVM.contatos.bancario) {
+                numBase = dadosGrupoVM.contatos.bancario.numero;
+            } else if (servico.categoria === 'tributario' && dadosGrupoVM.contatos.tributario) {
+                numBase = dadosGrupoVM.contatos.tributario.numero;
+            }
+        }
+
+        const waLink = `https://wa.me/${numBase.startsWith('55') ? numBase : '55' + numBase}?text=${encodedMsg}`;
 
         serviceCard.innerHTML = `
             <span class="service-icon">${servico.icone}</span>
@@ -269,8 +280,8 @@ async function loadBlog() {
         return;
     }
 
-    // Pega os 3 posts mais recentes
-    let recentPosts = Array.isArray(posts) ? posts.slice(0, 3) : [];
+    // Pega apenas o último post publicado (o mais recente)
+    let recentPosts = Array.isArray(posts) ? posts.slice(0, 1) : [];
 
     // Limpa e prepara o container
     blogGrid.innerHTML = '';
@@ -314,7 +325,71 @@ async function loadBlog() {
     });
 }
 
-// Statistics Counter Animation
+// Load Contacts
+function loadContacts() {
+    if (!dadosGrupoVM.contatos) return;
+
+    const contatos = dadosGrupoVM.contatos;
+
+    // 1. Atualiza o número de contato geral (VM_telefone_contato)
+    const telGeral = contatos.geral;
+    if (telGeral) {
+        document.querySelectorAll('.vm-contato-geral-tel').forEach(el => {
+            el.textContent = telGeral.formatado;
+            if (el.tagName === 'A') el.href = `tel:+55${telGeral.numero}`;
+        });
+        document.querySelectorAll('.vm-contato-geral-wa').forEach(el => {
+            if (el.tagName === 'A') {
+                const currentHref = el.href;
+                const url = new URL(currentHref);
+                const text = url.searchParams.get('text') || '';
+                el.href = `https://wa.me/55${telGeral.numero}?text=${text}`;
+            }
+        });
+    }
+
+    // 2. Atualiza o número de atendimento bancário (VM_atendimento_bancario)
+    const telBancario = contatos.bancario;
+    if (telBancario) {
+        document.querySelectorAll('.vm-contato-bancario-tel').forEach(el => {
+            el.textContent = telBancario.formatado;
+            if (el.tagName === 'A') el.href = `tel:+55${telBancario.numero}`;
+        });
+        document.querySelectorAll('.vm-contato-bancario-wa').forEach(el => {
+            if (el.tagName === 'A') {
+                const currentHref = el.href;
+                try {
+                    const url = new URL(currentHref);
+                    const text = url.searchParams.get('text') || '';
+                    el.href = `https://wa.me/55${telBancario.numero}?text=${text}`;
+                } catch (e) {
+                    el.href = `https://wa.me/55${telBancario.numero}`;
+                }
+            }
+        });
+    }
+
+    // 3. Atualiza o número de atendimento tributário (VM_atendimento_tributario) - O atual do site
+    const telTributario = contatos.tributario;
+    if (telTributario) {
+        document.querySelectorAll('.vm-contato-tributario-tel').forEach(el => {
+            el.textContent = telTributario.formatado;
+            if (el.tagName === 'A') el.href = `tel:+55${telTributario.numero}`;
+        });
+        document.querySelectorAll('.vm-contato-tributario-wa').forEach(el => {
+            if (el.tagName === 'A') {
+                const currentHref = el.href;
+                try {
+                    const url = new URL(currentHref);
+                    const text = url.searchParams.get('text') || '';
+                    el.href = `https://wa.me/55${telTributario.numero}?text=${text}`;
+                } catch (e) {
+                    el.href = `https://wa.me/55${telTributario.numero}`;
+                }
+            }
+        });
+    }
+}
 function animateCounter(element, target, duration = 2000) {
     const start = 0;
     const increment = target / (duration / 16);
