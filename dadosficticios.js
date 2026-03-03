@@ -9,7 +9,7 @@ const dadosGrupoVM = {
       foto: "/assets/equipe/nathalia-bins-voigt.jpeg",
       descricao: "Especialista em Direito Tributário, desenvolvimento de negócios e relacionamento com clientes. Lidera a equipe comercial, impulsiona resultados e fortalece parcerias.",
       email: "nathaliavoigt@vmgestaoestrategica.com.br",
-      whatsapp: "5551996353096",
+      whatsapp: "5551993917403",
       linkedin: "https://www.linkedin.com/company/vmgestaoestrategica/",
       instagram: "https://www.instagram.com/vmgestaoestrategica/"
     },
@@ -20,7 +20,7 @@ const dadosGrupoVM = {
       foto: "/assets/equipe/leandro-souza-mendonca.jpeg",
       descricao: "Especialista em Advocacia Cível, com mais de 10 anos de atuação nas áreas bancária e jurídica. Lidera a equipe técnica, supervisiona estratégias e padroniza processos para garantir a excelência na entrega aos clientes.",
       email: "leandromendonca@vmgestaoestrategica.com.br",
-      whatsapp: "5551984538987",
+      whatsapp: "5551993917403",
       linkedin: "https://www.linkedin.com/company/vmgestaoestrategica/",
       instagram: "https://www.instagram.com/vmgestaoestrategica/"
     }
@@ -119,16 +119,16 @@ const dadosGrupoVM = {
       formatado: "(51) 99391-7403"
     },
     bancario: {
-      id: "VM_atendimento_bancario",
+      id: "VM_telefone_contato",
       nome: "Atendimento Bancário",
-      numero: "51984538987",
-      formatado: "(51) 98453-8987"
+      numero: "51993917403",
+      formatado: "(51) 99391-7403"
     },
     tributario: {
-      id: "VM_atendimento_tributario",
+      id: "VM_telefone_contato",
       nome: "Atendimento Tributário",
-      numero: "51996353096",
-      formatado: "(51) 99635-3096"
+      numero: "51993917403",
+      formatado: "(51) 99391-7403"
     }
   }
 };

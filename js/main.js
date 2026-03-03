@@ -137,15 +137,26 @@ function loadContacts() {
     if (typeof dadosGrupoVM === 'undefined' || !dadosGrupoVM.contatos) return;
 
     const contatos = dadosGrupoVM.contatos;
-
-    // 1. Número de contato geral (VM_telefone_contato)
     const telGeral = contatos.geral;
-    if (telGeral) {
-        document.querySelectorAll('.vm-contato-geral-tel').forEach(el => {
+
+    if (!telGeral) return;
+
+    // Unifica todos os contatos carregados via classes de serviço para o número geral
+    const classesToUpdate = [
+        '.vm-contato-geral',
+        '.vm-contato-bancario',
+        '.vm-contato-tributario'
+    ];
+
+    classesToUpdate.forEach(baseClass => {
+        // Atualiza textos e links de telefone
+        document.querySelectorAll(`${baseClass}-tel`).forEach(el => {
             el.textContent = telGeral.formatado;
             if (el.tagName === 'A') el.href = `tel:+55${telGeral.numero}`;
         });
-        document.querySelectorAll('.vm-contato-geral-wa').forEach(el => {
+
+        // Atualiza links de WhatsApp
+        document.querySelectorAll(`${baseClass}-wa`).forEach(el => {
             if (el.tagName === 'A') {
                 try {
                     const currentHref = el.href;
@@ -161,57 +172,36 @@ function loadContacts() {
                 }
             }
         });
-    }
+    });
 
-    // 2. Atendimento bancário (VM_atendimento_bancario)
-    const telBancario = contatos.bancario;
-    if (telBancario) {
-        document.querySelectorAll('.vm-contato-bancario-tel').forEach(el => {
-            el.textContent = telBancario.formatado;
-            if (el.tagName === 'A') el.href = `tel:+55${telBancario.numero}`;
-        });
-        document.querySelectorAll('.vm-contato-bancario-wa').forEach(el => {
-            if (el.tagName === 'A') {
-                try {
-                    const currentHref = el.href;
-                    if (currentHref.includes('wa.me')) {
-                        const url = new URL(currentHref);
-                        const text = url.searchParams.get('text') || '';
-                        el.href = `https://wa.me/55${telBancario.numero}?text=${encodeURIComponent(text)}`;
-                    } else {
-                        el.href = `https://wa.me/55${telBancario.numero}`;
-                    }
-                } catch (e) {
-                    el.href = `https://wa.me/55${telBancario.numero}`;
+    // Atualiza botões flutuantes ou outros links de WhatsApp genéricos que devem ser unificados
+    document.querySelectorAll('.whatsapp-float, .btn-whatsapp-fixo').forEach(el => {
+        if (el.tagName === 'A') {
+            try {
+                const currentHref = el.href;
+                if (currentHref.includes('wa.me')) {
+                    const url = new URL(currentHref);
+                    const text = url.searchParams.get('text') || '';
+                    el.href = `https://wa.me/55${telGeral.numero}?text=${encodeURIComponent(text)}`;
+                } else {
+                    el.href = `https://wa.me/55${telGeral.numero}`;
                 }
+            } catch (e) {
+                el.href = `https://wa.me/55${telGeral.numero}`;
+            }
+        }
+    });
+
+    // Atualiza qualquer outro link que contenha o número antigo do tributário ou bancário
+    // (Opcional, mas garante consistência se houver links hardcoded no HTML)
+    const numerosAntigos = ['51984538987', '51996353096'];
+    document.querySelectorAll('a[href*="wa.me"]').forEach(el => {
+        numerosAntigos.forEach(num => {
+            if (el.href.includes(num)) {
+                el.href = el.href.replace(num, telGeral.numero);
             }
         });
-    }
-
-    // 3. Atendimento tributário (VM_atendimento_tributario)
-    const telTributario = contatos.tributario;
-    if (telTributario) {
-        document.querySelectorAll('.vm-contato-tributario-tel').forEach(el => {
-            el.textContent = telTributario.formatado;
-            if (el.tagName === 'A') el.href = `tel:+55${telTributario.numero}`;
-        });
-        document.querySelectorAll('.vm-contato-tributario-wa').forEach(el => {
-            if (el.tagName === 'A') {
-                try {
-                    const currentHref = el.href;
-                    if (currentHref.includes('wa.me')) {
-                        const url = new URL(currentHref);
-                        const text = url.searchParams.get('text') || '';
-                        el.href = `https://wa.me/55${telTributario.numero}?text=${encodeURIComponent(text)}`;
-                    } else {
-                        el.href = `https://wa.me/55${telTributario.numero}`;
-                    }
-                } catch (e) {
-                    el.href = `https://wa.me/55${telTributario.numero}`;
-                }
-            }
-        });
-    }
+    });
 }
 
 

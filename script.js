@@ -169,14 +169,7 @@ async function loadServices(filter = 'todos', searchTerm = '') {
 
                 const encodedMsg = encodeURIComponent(`Olá! Quero saber mais sobre o serviço: ${servicoIndividual} (Scopo: ${scopo.nome_scopo})`);
 
-                let numBase = (dadosGrupoVM.contatos && dadosGrupoVM.contatos.geral) ? dadosGrupoVM.contatos.geral.numero : "5551993917403";
-                if (dadosGrupoVM.contatos) {
-                    if (scopo.slug === 'bancario' && dadosGrupoVM.contatos.bancario) {
-                        numBase = dadosGrupoVM.contatos.bancario.numero;
-                    } else if (scopo.slug === 'tributario' && dadosGrupoVM.contatos.tributario) {
-                        numBase = dadosGrupoVM.contatos.tributario.numero;
-                    }
-                }
+                let numBase = (dadosGrupoVM.contatos && dadosGrupoVM.contatos.geral) ? dadosGrupoVM.contatos.geral.numero : "51993917403";
 
                 const waLink = `https://wa.me/${numBase.startsWith('55') ? numBase : '55' + numBase}?text=${encodedMsg}`;
 
@@ -213,14 +206,7 @@ async function loadServices(filter = 'todos', searchTerm = '') {
             const itemsHTML = scopo.areas.map(item => `<li>${item}</li>`).join('');
             const encodedMsg = encodeURIComponent(`Olá! Quero saber mais sobre ${scopo.nome_scopo} (Vim pela Home do site)`);
 
-            let numBase = (dadosGrupoVM.contatos && dadosGrupoVM.contatos.geral) ? dadosGrupoVM.contatos.geral.numero : "5551993917403";
-            if (dadosGrupoVM.contatos) {
-                if (scopo.slug === 'bancario' && dadosGrupoVM.contatos.bancario) {
-                    numBase = dadosGrupoVM.contatos.bancario.numero;
-                } else if (scopo.slug === 'tributario' && dadosGrupoVM.contatos.tributario) {
-                    numBase = dadosGrupoVM.contatos.tributario.numero;
-                }
-            }
+            let numBase = (dadosGrupoVM.contatos && dadosGrupoVM.contatos.geral) ? dadosGrupoVM.contatos.geral.numero : "51993917403";
 
             const waLink = `https://wa.me/${numBase.startsWith('55') ? numBase : '55' + numBase}?text=${encodedMsg}`;
 
