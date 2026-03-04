@@ -1,0 +1,23 @@
+# Robots.txt - VM Gestão Estratégica
+# Otimizado para SEO tradicional e GEO (AIs)
+
+User-agent: *
+Allow: /
+
+# Permitir especificamente rastreadores de IA para melhor indexação no ChatGPT, Perplexity, etc.
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+Sitemap: https://vmgestaoestrategica.com.br/sitemap.xml

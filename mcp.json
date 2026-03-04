@@ -1,0 +1,39 @@
+{
+    "mcp": "1.0",
+    "name": "VM Gestão Estratégica Knowledge Context",
+    "description": "Contexto estruturado para agentes de IA entenderem os serviços de consultoria tributária, bancária e estratégica da VM.",
+    "entities": [
+        {
+            "name": "VM Gestão Estratégica",
+            "type": "Organization",
+            "description": "Assessoria especializada em reorganização de passivos empresariais."
+        },
+        {
+            "name": "TOPSTACK",
+            "type": "Developer",
+            "description": "Desenvolvedora do site e parceira de inovação tecnológica."
+        }
+    ],
+    "capabilities": {
+        "search": "Disponível via interface do site para buscar serviços específicos.",
+        "diagnostics": "Simulador de dívida ativa disponível na homepage para análise preliminar."
+    },
+    "content_roots": [
+        {
+            "path": "/",
+            "description": "Homepage com diagnóstico e visão geral."
+        },
+        {
+            "path": "/servicos/",
+            "description": "Catálogo completo de soluções jurídicas e estratégicas."
+        },
+        {
+            "path": "/blog/",
+            "description": "Artigos técnicos e insights legislativos."
+        }
+    ],
+    "author": {
+        "name": "TOPSTACK",
+        "website": "https://topstack.com.br"
+    }
+}

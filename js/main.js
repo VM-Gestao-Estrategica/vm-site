@@ -33,8 +33,81 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Carregar rodapé
-    loadComponent("footer-placeholder", "/templates/_footer.html");
+    loadComponent("footer-placeholder", "/templates/_footer.html", () => {
+        initializeAnchorLinks();
+    });
+
+    // Inicializar scroll suave se estiver vindo de outra página com um hash
+    handleHashOnLoad();
 });
+
+// Função para tratar o scroll quando a página carrega com um hash (ex: /#sobre)
+function handleHashOnLoad() {
+    if (window.location.hash) {
+        const hash = window.location.hash;
+        // Pequeno atraso para garantir que os componentes (header/footer) foram carregados
+        setTimeout(() => {
+            const target = document.querySelector(hash);
+            if (target) {
+                const headerHeight = document.querySelector('.nav')?.offsetHeight || 80;
+                const elementPosition = target.getBoundingClientRect().top + window.pageYOffset;
+                window.scrollTo({
+                    top: elementPosition - headerHeight,
+                    behavior: 'smooth'
+                });
+            }
+        }, 500);
+    }
+}
+
+// Intercepta cliques em links com âncoras para fazer scroll suave
+function initializeAnchorLinks() {
+    document.querySelectorAll('a[href*="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            const href = this.getAttribute('href');
+
+            // Se for apenas uma âncora interna (ex: "#sobre")
+            if (href.startsWith('#')) {
+                const target = document.querySelector(href);
+                if (target) {
+                    e.preventDefault();
+                    smoothScrollTo(target);
+                }
+            }
+            // Se for um link absoluto com âncora para a home (ex: "/#sobre")
+            else if (href.includes('#')) {
+                const pathParts = href.split('#');
+                const path = pathParts[0];
+                const hash = '#' + pathParts[1];
+
+                // Se já estivermos na home (ou na raiz), faz apenas o scroll suave
+                if (window.location.pathname === '/' || window.location.pathname === '/index.html' || path === '/') {
+                    const target = document.querySelector(hash);
+                    if (target) {
+                        e.preventDefault();
+                        // Se estivermos em outra página (ex: /blog/), o browser vai redirecionar nativamente
+                        // Mas se estivermos na home, queremos o scroll suave sem recarregar
+                        if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
+                            smoothScrollTo(target);
+                            // Atualiza a URL sem "sujar" com o # (opcional, mas deixa o link limpo como pedido)
+                            history.pushState(null, null, ' ');
+                        }
+                    }
+                }
+            }
+        });
+    });
+}
+
+function smoothScrollTo(target) {
+    const headerHeight = document.querySelector('.nav')?.offsetHeight || 72;
+    const elementPosition = target.getBoundingClientRect().top + window.pageYOffset;
+
+    window.scrollTo({
+        top: elementPosition - headerHeight,
+        behavior: "smooth"
+    });
+}
 
 function initializeGlobalSearch() {
     const trigger = document.querySelector('.search-trigger');
