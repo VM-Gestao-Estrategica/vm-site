@@ -12,6 +12,10 @@ credenciais/
 *.key
 *credentials*
 *acess*
+produtos/
+squemas.md
+IMPLEMENTACAO-COMPLETA.md
+
 
 # Logs
 *.log
