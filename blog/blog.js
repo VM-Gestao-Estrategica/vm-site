@@ -4,6 +4,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const blogGrid = document.getElementById('blogGrid');
     if (!blogGrid) return;
 
+    // Renderiza o componente de Newsletter
+    if (typeof renderNewsletter === 'function') {
+        renderNewsletter('newsletter-placeholder');
+    }
+
     let allPosts = [];
     try {
         // A única fonte de dados agora é a API do Supabase
@@ -41,18 +46,26 @@ document.addEventListener('DOMContentLoaded', async () => {
         const formattedDate = new Date(post.data_publicacao).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
         const categoryName = post.categoria && post.categoria.nome ? post.categoria.nome : 'Blog';
 
+        const fallbackImage = 'assets/site-imagens/vm-banner-blog.jpg';
         let imageUrl = post.imagem_url;
+
+        // Verifica se a imagem é válida
         if (!imageUrl || (!imageUrl.startsWith('http') && !imageUrl.startsWith('assets'))) {
-            imageUrl = null;
+            imageUrl = fallbackImage;
         }
 
-        const imageSrc = imageUrl ? (imageUrl.startsWith('http') ? imageUrl : `../${imageUrl}`) : null;
-        const imageHTML = imageSrc ? `<div class="blog-row-image"><img src="${imageSrc}" alt="${post.titulo}"></div>` : '';
+        const imageSrc = imageUrl.startsWith('http') ? imageUrl : `../${imageUrl}`;
+        const imageHTML = `<div class="blog-row-image">
+            <img src="${imageSrc}" 
+                 alt="${post.titulo}"
+                 loading="lazy"
+                 onerror="this.onerror=null; this.src='../${fallbackImage}';">
+        </div>`;
 
         row.innerHTML = `
             <div class="blog-row-content">
                 <span class="section-tag">${categoryName}</span>
-                <h2>${post.titulo}</h2>
+                <h3>${post.titulo}</h3>
                 <p class="excerpt">${post.resumo}</p>
                 <div class="read-more">
                     Ler artigo completo

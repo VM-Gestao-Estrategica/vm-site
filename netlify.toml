@@ -1,19 +1,43 @@
-# Configuração do Netlify para deploy seguro
-# 
-# Este arquivo configura o processo de build no Netlify.
-# O script de build gerará automaticamente o arquivo sdk/config.js
-# a partir das variáveis de ambiente configuradas no painel do Netlify.
+# Configuração do Netlify para deploy seguro e performance extrema
+# Otimizado para Lighthouse 100%
 
 [build]
-  # Comando de build que gera o config.js a partir das variáveis de ambiente
   command = "node scripts/build-config.js"
-  
-  # Diretório de publicação (ajuste conforme necessário)
   publish = "."
 
-# Configurações de redirecionamento (opcional)
-# [[redirects]]
-#   from = "/*"
-#   to = "/index.html"
-#   status = 200
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://www.googletagmanager.com https://cdn.jsdelivr.net https://wa.me https://connect.facebook.net https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co https://servicodados.ibge.gov.br https://www.google-analytics.com https://stats.g.doubleclick.net https://www.facebook.com https://cdn.jsdelivr.net; frame-src https://www.googletagmanager.com https://www.facebook.com;"
+    
+    # Early Hints (Link Header) for Performance
+    Link = '''
+      </assets/site-imagens/sessao-hero.jpg>; rel=preload; as=image; fetchpriority=high,
+      <https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap>; rel=preconnect
+    '''
 
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/sdk/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

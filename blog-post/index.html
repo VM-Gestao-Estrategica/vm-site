@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0f172a">
 
     <!-- Google Tag Manager -->
     <script>(function (w, d, s, l, i) {
@@ -27,6 +28,7 @@
     <meta name="description"
         content="Leia o artigo completo e obtenha insights estratégicos da VM Gestão Estratégica sobre gestão empresarial.">
     <meta name="author" content="VM Gestão Estratégica">
+    <link rel="canonical" href="https://vmgestaoestrategica.com.br/blog-post/">
 
     <!-- Open Graph / Facebook (tags genéricas) -->
     <meta property="og:type" content="article">
@@ -91,26 +93,28 @@
         }
     </style>
 
-    <div id="header-placeholder"></div>
+    <header id="header-placeholder" role="banner"></header>
 
 
 
-    <main class="blog-main-content">
+    <main class="blog-main-content" role="main">
         <div class="container" id="blogPost">
             <!-- O conteúdo do post individual será carregado aqui pelo blog-post.js -->
         </div>
+        <div class="container" id="newsletter-placeholder"></div>
     </main>
 
     <!-- Footer -->
-    <div id="footer-placeholder"></div>
+    <div id="footer-placeholder" role="contentinfo"></div>
 
     <!-- Scripts com caminhos relativos -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../sdk/config.js"></script>
-    <script src="../sdk/blog-supabase.js"></script>
-    <script src="../dadosficticios.js"></script>
-    <script src="./blog-post.js"></script>
-    <script src="../js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="../sdk/config.js" defer></script>
+    <script src="../sdk/blog-supabase.js" defer></script>
+    <script src="../sdk/newsletter-supabase.js" defer></script>
+    <script src="../vm_portal_data.js" defer></script>
+    <script src="./blog-post.js" defer></script>
+    <script src="../js/main.js" defer></script>
 </body>
 
 </html>

@@ -4,6 +4,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const postContainer = document.getElementById('blogPost');
     if (!postContainer) return;
 
+    // Renderiza o componente de Newsletter
+    if (typeof renderNewsletter === 'function') {
+        renderNewsletter('newsletter-placeholder');
+    }
+
     // Lendo o slug a partir do parâmetro da URL (ex: ?post=o-slug-do-post)
     const urlParams = new URLSearchParams(window.location.search);
     const postSlug = urlParams.get('post');
@@ -49,11 +54,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <span style="text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">Publicado em ${formattedDate}</span>
                 </div>
 
+                <img src="${post.imagem_url && (post.imagem_url.startsWith('http') || post.imagem_url.startsWith('assets')) ? post.imagem_url : '../assets/site-imagens/vm-banner-blog.jpg'}" 
+                     alt="${post.titulo}" 
+                     class="post-main-image"
+                     onerror="this.onerror=null; this.src='../assets/site-imagens/vm-banner-blog.jpg';">
+
                 <div class="post-content">
-                    <h1 style="font-family: 'Lexend', sans-serif; font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800; color: var(--primary); margin-bottom: 2rem; line-height: 1.1; letter-spacing: -0.02em;">
+                    <h1 style="font-family: 'Lexend', sans-serif; font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 800; color: var(--primary); margin-bottom: 2rem; line-height: 1.15; letter-spacing: -0.02em;">
                         ${post.titulo}
                     </h1>
-                    <p class="lead" style="font-size: 1.4rem; line-height: 1.6; color: var(--primary); margin-bottom: 2rem; font-weight: 500; border-left: 4px solid var(--accent); padding-left: 2rem;">
+                    <p class="lead" style="font-size: 1.15rem; line-height: 1.6; color: var(--primary); margin-bottom: 2.5rem; font-weight: 500; border-left: 4px solid var(--accent); padding-left: 2rem;">
                         ${post.resumo}
                     </p>
 
@@ -76,10 +86,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </div>
                 </div>
 
-                ${post.imagem_url ? `<img src="${post.imagem_url}" alt="${post.titulo}" class="post-main-image">` : ''}
-                
                 <div class="post-content">
-                    <div class="post-body-text" style="font-size: 1.15rem; line-height: 1.8; color: #444;">
+                    <div class="post-body-text" style="font-size: 1.1rem; line-height: 1.8; color: #444; white-space: pre-wrap;">
                         ${post.conteudo}
                     </div>
                 </div>

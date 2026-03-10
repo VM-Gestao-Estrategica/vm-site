@@ -1,7 +1,15 @@
 document.addEventListener("DOMContentLoaded", function () {
     // Função para carregar componentes HTML reutilizáveis
     const loadComponent = (elementId, url, callback) => {
-        // Garante que o caminho seja absoluto em relação à raiz do site
+        const element = document.getElementById(elementId);
+        // Se o componente já estiver no HTML (SSG/pré-carregado), apenas executa o callback
+        if (element && element.innerHTML.trim() !== "") {
+            if (callback) callback();
+            return;
+        }
+
+        if (!element) return;
+
         const absoluteUrl = url.startsWith('/') ? url : `/${url}`;
         fetch(absoluteUrl)
             .then(response => {
@@ -11,12 +19,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 return response.text();
             })
             .then(data => {
-                const element = document.getElementById(elementId);
-                if (element) {
-                    element.innerHTML = data;
-                    if (callback) {
-                        callback();
-                    }
+                element.innerHTML = data;
+                if (callback) {
+                    callback();
                 }
             })
             .catch(error => console.error(error));
@@ -169,9 +174,10 @@ function initializeGlobalSearch() {
 
                 // Busca nos Serviços Individuais
                 if (scopo.servicos) {
-                    scopo.servicos.forEach(servico => {
-                        if (normalize(servico).includes(termNormalized)) {
-                            results.push({ type: scopo.nome_scopo, title: servico, slug: scopo.slug, item: servico });
+                    scopo.servicos.forEach(servicoData => {
+                        const nomeServico = typeof servicoData === 'string' ? servicoData : servicoData.nome;
+                        if (normalize(nomeServico).includes(termNormalized)) {
+                            results.push({ type: scopo.nome_scopo, title: nomeServico, slug: scopo.slug, item: nomeServico });
                         }
                     });
                 }
@@ -326,3 +332,58 @@ function initializeMobileNav() {
         window.addEventListener('resize', handleScroll); // Garante ajuste se a tela redimensionar
     }
 }
+
+// 3. Componente Newsletter Reutilizável
+function renderNewsletter(elementId) {
+    const container = document.getElementById(elementId);
+    if (!container) return;
+
+    container.innerHTML = `
+        <section class="newsletter-section">
+            <div class="newsletter-content">
+                <h3>Insights na sua caixa de entrada</h3>
+                <p>Receba as últimas atualizações sobre gestão estratégica e segurança jurídica.</p>
+            </div>
+            <form class="newsletter-form" id="newsletterForm">
+                <input type="email" id="newsletterEmail" placeholder="Seu melhor e-mail" required aria-label="E-mail para newsletter">
+                <button type="submit" class="newsletter-btn" id="newsletterSubmit">Assinar Agora</button>
+            </form>
+            <div id="newsletterMessage" class="newsletter-message"></div>
+        </section>
+    `;
+
+    const form = document.getElementById('newsletterForm');
+    const msg = document.getElementById('newsletterMessage');
+    const btn = document.getElementById('newsletterSubmit');
+
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('newsletterEmail').value;
+
+            btn.disabled = true;
+            btn.textContent = 'Enviando...';
+            msg.className = 'newsletter-message active';
+            msg.textContent = 'Processando sua inscrição...';
+            msg.style.display = 'block';
+
+            try {
+                if (typeof window.newsletterAPI === 'undefined' || !window.newsletterAPI.subscribeToNewsletter) {
+                    throw new Error('Newsletter API não carregada');
+                }
+                await window.newsletterAPI.subscribeToNewsletter(email);
+                msg.className = 'newsletter-message active success';
+                msg.textContent = 'Inscrição realizada! Seja bem-vindo.';
+                form.reset();
+            } catch (err) {
+                console.error(err);
+                msg.className = 'newsletter-message active error';
+                msg.textContent = 'Erro ao se inscrever. Tente novamente.';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Assinar Agora';
+            }
+        });
+    }
+}
+

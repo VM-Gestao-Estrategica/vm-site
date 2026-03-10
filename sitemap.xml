@@ -3,32 +3,38 @@
   <!-- Optimized for SEO by TOPSTACK (https://topstack.com.br) - Transformando tecnologia em vantagem -->
   <url>
     <loc>https://vmgestaoestrategica.com.br/</loc>
-    <lastmod>2025-03-02</lastmod>
+    <lastmod>2026-03-06</lastmod>
+    <changefreq>daily</changefreq>
     <priority>1.00</priority>
   </url>
   <url>
     <loc>https://vmgestaoestrategica.com.br/servicos/</loc>
-    <lastmod>2025-03-02</lastmod>
-    <priority>0.80</priority>
+    <lastmod>2026-03-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
   </url>
   <url>
     <loc>https://vmgestaoestrategica.com.br/blog/</loc>
-    <lastmod>2025-03-02</lastmod>
+    <lastmod>2026-03-06</lastmod>
+    <changefreq>daily</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://vmgestaoestrategica.com.br/links/</loc>
-    <lastmod>2025-03-02</lastmod>
-    <priority>0.50</priority>
+    <lastmod>2026-03-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.70</priority>
   </url>
   <url>
     <loc>https://vmgestaoestrategica.com.br/privacidade/</loc>
-    <lastmod>2025-03-02</lastmod>
+    <lastmod>2026-03-06</lastmod>
+    <changefreq>yearly</changefreq>
     <priority>0.30</priority>
   </url>
   <url>
     <loc>https://vmgestaoestrategica.com.br/termos/</loc>
-    <lastmod>2025-03-02</lastmod>
+    <lastmod>2026-03-06</lastmod>
+    <changefreq>yearly</changefreq>
     <priority>0.30</priority>
   </url>
 </urlset>

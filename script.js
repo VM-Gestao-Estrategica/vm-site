@@ -60,7 +60,7 @@ document.querySelectorAll('.value-item, .practice-item, .contact-method').forEac
     observer.observe(el);
 });
 
-// Load dynamic content from dadosficticios.js
+// Load dynamic content from vm_portal_data.js
 document.addEventListener('DOMContentLoaded', () => {
     if (typeof dadosGrupoVM !== 'undefined') {
         loadServices();
@@ -156,9 +156,13 @@ async function loadServices(filter = 'todos', searchTerm = '') {
             // Filtro por Categoria (Slug)
             if (filter !== 'todos' && scopo.slug !== filter) return;
 
-            scopo.servicos.forEach(servicoIndividual => {
-                // Filtro por Busca Textual
-                if (searchTerm && !servicoIndividual.toLowerCase().includes(normalizedTerm)) {
+            scopo.servicos.forEach(servicoData => {
+                // Suporta o formato antigo (string) e o novo (objeto)
+                const nomeServico = typeof servicoData === 'string' ? servicoData : servicoData.nome;
+                const descricaoServico = typeof servicoData === 'object' ? servicoData.descricao : "";
+
+                // Filtro por Busca Textual (normalizada)
+                if (searchTerm && !nomeServico.toLowerCase().includes(normalizedTerm)) {
                     return;
                 }
 
@@ -167,16 +171,21 @@ async function loadServices(filter = 'todos', searchTerm = '') {
                 card.className = 'service-card individual-service fade-in';
                 card.style.borderRadius = '0';
 
-                const encodedMsg = encodeURIComponent(`Olá! Quero saber mais sobre o serviço: ${servicoIndividual} (Scopo: ${scopo.nome_scopo})`);
+                const encodedMsg = encodeURIComponent(`Olá! Quero saber mais sobre o serviço: ${nomeServico} (Escopo: ${scopo.nome_scopo})`);
 
                 let numBase = (dadosGrupoVM.contatos && dadosGrupoVM.contatos.geral) ? dadosGrupoVM.contatos.geral.numero : "51993917403";
 
                 const waLink = `https://wa.me/${numBase.startsWith('55') ? numBase : '55' + numBase}?text=${encodedMsg}`;
 
                 card.innerHTML = `
-                    <span class="service-icon">${scopo.icone}</span>
-                    <span class="section-tag">${scopo.nome_scopo}</span>
-                    <h3>${servicoIndividual}</h3>
+                    <div class="service-card-header">
+                        <span class="service-icon">${scopo.icone}</span>
+                        <span class="section-tag">${scopo.nome_scopo}</span>
+                    </div>
+                    <h3>${nomeServico}</h3>
+                    <p class="service-description">
+                        ${descricaoServico}
+                    </p>
                     <div class="mt-auto">
                         <a href="${waLink}" target="_blank" class="service-link">
                             Solicitar Diagnóstico
@@ -216,7 +225,7 @@ async function loadServices(filter = 'todos', searchTerm = '') {
                 <ul class="service-details">
                     ${itemsHTML}
                 </ul>
-                <a href="${waLink}" target="_blank" class="service-link">
+                <a href="${waLink}" target="_blank" rel="noopener noreferrer" class="service-link">
                     Saiba mais
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </a>
@@ -269,7 +278,7 @@ function loadTeam() {
         // Bloco da Foto
         const photoBlock = document.createElement('div');
         photoBlock.className = 'team-photo-block';
-        photoBlock.innerHTML = `<img src="${membro.foto}" alt="${membro.nome}">`;
+        photoBlock.innerHTML = `<img src="${membro.foto}" alt="${membro.nome}" width="400" height="400" loading="lazy">`;
 
         // Bloco de Informações
         const infoBlock = document.createElement('div');
@@ -354,13 +363,21 @@ async function loadBlog() {
         const formattedDate = new Date(post.data_publicacao).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
         const categoryName = post.categoria && post.categoria.nome ? post.categoria.nome : 'Blog';
 
+        const fallbackImage = 'assets/site-imagens/vm-banner-blog.jpg';
         let imageUrl = post.imagem_url;
+
+        // Verifica se a imagem é válida
         if (!imageUrl || (!imageUrl.startsWith('http') && !imageUrl.startsWith('assets'))) {
-            imageUrl = null;
+            imageUrl = fallbackImage;
         }
 
-        const imageSrc = imageUrl ? (imageUrl.startsWith('http') ? imageUrl : `/${imageUrl}`) : null;
-        const imageHTML = imageSrc ? `<div class="blog-row-image"><img src="${imageSrc}" alt="${post.titulo}"></div>` : '';
+        const imageSrc = imageUrl.startsWith('http') ? imageUrl : `/${imageUrl}`;
+        const imageHTML = `<div class="blog-row-image">
+            <img src="${imageSrc}" 
+                 alt="${post.titulo}" 
+                 loading="lazy"
+                 onerror="this.onerror=null; this.src='/${fallbackImage}';">
+        </div>`;
 
         blogRow.innerHTML = `
             <div class="blog-row-content">
