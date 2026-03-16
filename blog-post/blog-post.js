@@ -4,10 +4,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const postContainer = document.getElementById('blogPost');
     if (!postContainer) return;
 
-    // Renderiza o componente de Newsletter
-    if (typeof renderNewsletter === 'function') {
-        renderNewsletter('newsletter-placeholder');
-    }
+    // Newsletter rendering will be called after post load
 
     // Lendo o slug a partir do parâmetro da URL (ex: ?post=o-slug-do-post)
     const urlParams = new URLSearchParams(window.location.search);
@@ -23,6 +20,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (post) {
             renderSinglePost(post);
+            // Render newsletter ONLY after post is in DOM
+            if (typeof renderNewsletter === 'function') {
+                renderNewsletter('newsletter-placeholder');
+            }
         } else {
             postContainer.innerHTML = '<p>Post não encontrado. <a href="../blog/">Voltar para o blog</a>.</p>';
         }

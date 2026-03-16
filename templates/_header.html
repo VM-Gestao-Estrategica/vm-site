@@ -1,23 +1,22 @@
-<!-- Navigation -->
-<nav class="nav">
+<nav class="nav" role="navigation" aria-label="Menu principal">
     <div class="container">
-        <!-- O link do logo agora aponta para a raiz do site -->
-        <a href="/" class="nav-logo-link">
-            <img src="/assets/identidade-visual/logo-vm-3x1-sb.png" alt="VM Gestão Estratégica" class="nav-logo">
+        <a href="/" class="nav-logo-link" aria-label="VM Gestão Estratégica - Home">
+            <img src="/assets/identidade-visual/logo-vm-3x1-sb.png" alt="VM Gestão Estratégica" class="nav-logo"
+                width="180" height="60">
         </a>
         <div class="nav-links">
-            <a href="/#sobre">Sobre</a>
+            <a href="/sobre">Sobre</a>
             <a href="/servicos/">Serviços</a>
-            <a href="/#equipe">Equipe</a>
+            <a href="/equipe">Equipe</a>
             <a href="/blog/">Blog</a>
-            <a href="/#contato" class="nav-cta">Contato</a>
+            <a href="/contato/" class="nav-cta">Contato</a>
         </div>
 
         <div class="nav-actions">
-            <!-- Botão de Busca -->
             <button class="search-trigger" aria-label="Abrir Busca">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="lucide lucide-search">
                     <circle cx="11" cy="11" r="8"></circle>
                     <path d="m21 21-4.3-4.3"></path>
                 </svg>
@@ -30,7 +29,6 @@
             </button>
         </div>
 
-        <!-- Search Overlay -->
         <div class="search-overlay">
             <div class="search-overlay-container">
                 <div class="search-input-wrapper">
@@ -45,7 +43,6 @@
                     </button>
                 </div>
                 <div id="globalSearchResults" class="search-results-list">
-                    <!-- Resultados aparecerão aqui -->
                 </div>
             </div>
         </div>

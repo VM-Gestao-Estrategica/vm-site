@@ -69,18 +69,8 @@ document.addEventListener('DOMContentLoaded', () => {
         loadBlog();
     }
 
-    // Contact form handling
-    const contactForm = document.getElementById('contactForm');
-    if (contactForm) {
-        contactForm.addEventListener('submit', handleFormSubmit);
-
-        // Formatação automática do telefone
-        const telefoneInput = document.getElementById('telefone');
-        if (telefoneInput) {
-            telefoneInput.addEventListener('input', formatPhoneNumber);
-            telefoneInput.addEventListener('keydown', handlePhoneKeydown);
-        }
-    }
+    // Initialize contact form listeners
+    initializeContactForm();
 
     // Check for search input
     const serviceSearch = document.getElementById('serviceSearch');
@@ -110,12 +100,12 @@ document.addEventListener('DOMContentLoaded', () => {
             // Ativa o botão de filtro correto
             const filterBtn = document.querySelector(`.filter-btn[data-filter="${currentFilter}"]`);
             if (filterBtn) {
-                document.querySelectorAll('.filter-btn').forEach(b => {
-                    b.classList.remove('active', 'border-azul-acao', 'text-azul-acao');
-                    b.classList.add('border-gray-200', 'text-gray-500');
-                });
                 filterBtn.classList.add('active', 'border-azul-acao', 'text-azul-acao');
                 filterBtn.classList.remove('border-gray-200', 'text-gray-500');
+                
+                // Update aria-pressed
+                document.querySelectorAll('.filter-btn').forEach(b => b.setAttribute('aria-pressed', 'false'));
+                filterBtn.setAttribute('aria-pressed', 'true');
             }
 
             loadServices(currentFilter, currentSearch);
@@ -225,7 +215,7 @@ async function loadServices(filter = 'todos', searchTerm = '') {
                 <ul class="service-details">
                     ${itemsHTML}
                 </ul>
-                <a href="${waLink}" target="_blank" rel="noopener noreferrer" class="service-link">
+                <a href="${waLink}" target="_blank" rel="noopener noreferrer" class="service-link vm-contato-geral-wa">
                     Saiba mais
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </a>
@@ -250,9 +240,11 @@ function setupServiceFilters() {
             filterBtns.forEach(b => {
                 b.classList.remove('active', 'border-azul-acao', 'text-azul-acao');
                 b.classList.add('border-gray-200', 'text-gray-500');
+                b.setAttribute('aria-pressed', 'false');
             });
             btn.classList.add('active', 'border-azul-acao', 'text-azul-acao');
             btn.classList.remove('border-gray-200', 'text-gray-500');
+            btn.setAttribute('aria-pressed', 'true');
 
             // Filter
             const filter = btn.getAttribute('data-filter');
@@ -383,7 +375,7 @@ async function loadBlog() {
             <div class="blog-row-content">
                 <span class="section-tag">${categoryName}</span>
                 <h3>${post.titulo}</h3>
-                <p class="excerpt">${post.resumo}</p>
+                <p class="excerpt">${post.resumo || ''}</p>
                 <div class="read-more">
                     Ler artigo completo
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -544,6 +536,25 @@ function handlePhoneKeydown(e) {
     }
 }
 
+// Função para inicializar o formulário de contato (útil para carregamento dinâmico)
+function initializeContactForm() {
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm && !contactForm.dataset.initialized) {
+        contactForm.addEventListener('submit', handleFormSubmit);
+        contactForm.dataset.initialized = 'true';
+
+        // Formatação automática do telefone
+        const telefoneInput = document.getElementById('telefone');
+        if (telefoneInput) {
+            telefoneInput.addEventListener('input', formatPhoneNumber);
+            telefoneInput.addEventListener('keydown', handlePhoneKeydown);
+        }
+    }
+}
+
+// Exportar para uso global (necessário para o main.js)
+window.initializeContactForm = initializeContactForm;
+
 // Handle form submission
 async function handleFormSubmit(e) {
     e.preventDefault();
@@ -554,81 +565,98 @@ async function handleFormSubmit(e) {
     const formError = document.getElementById('formError');
     const errorMessage = document.getElementById('errorMessage');
 
-    // Esconde mensagens anteriores
-    if (formSuccess) formSuccess.classList.remove('active');
-    if (formError) formError.classList.remove('active');
+    // Esconde mensagens anteriores e garante visibilidade se necessário
+    if (formSuccess) {
+        formSuccess.classList.remove('active', 'opacity-100');
+        formSuccess.classList.add('hidden', 'opacity-0');
+    }
+    if (formError) {
+        formError.classList.remove('active', 'opacity-100');
+        formError.classList.add('hidden', 'opacity-0');
+    }
 
     // Desabilita o botão durante o envio
     if (submitButton) {
         submitButton.disabled = true;
+        const originalText = submitButton.textContent;
         submitButton.textContent = 'Enviando...';
-    }
+        
+        // Coleta os dados do formulário de forma robusta
+        try {
+            // Remove formatação do telefone antes de enviar (apenas números)
+            const telInput = form.querySelector('#telefone') || document.getElementById('telefone');
+            const telefoneValue = telInput ? telInput.value.replace(/\D/g, '') : '';
 
-    try {
-        // Coleta os dados do formulário
-        // Remove formatação do telefone antes de enviar (apenas números)
-        const telefoneValue = document.getElementById('telefone').value.replace(/\D/g, '');
+            const formData = {
+                nome: (form.querySelector('#nome') || document.getElementById('nome')).value.trim(),
+                email: (form.querySelector('#email') || document.getElementById('email')).value.trim(),
+                telefone: telefoneValue,
+                empresa: (form.querySelector('#empresa') || document.getElementById('empresa')).value.trim() || null,
+                assunto: (form.querySelector('#assunto') || document.getElementById('assunto')).value.trim(),
+                mensagem: (form.querySelector('#mensagem') || document.getElementById('mensagem')).value.trim()
+            };
 
-        const formData = {
-            nome: document.getElementById('nome').value.trim(),
-            email: document.getElementById('email').value.trim(),
-            telefone: telefoneValue,
-            empresa: document.getElementById('empresa').value.trim() || null,
-            assunto: document.getElementById('assunto').value.trim(),
-            mensagem: document.getElementById('mensagem').value.trim()
-        };
-
-        // Verifica se a API está disponível
-        if (!window.contactAPI || !window.contactAPI.submitContactForm) {
-            throw new Error('API de contato não está disponível. Verifique se contact-supabase.js está carregado.');
-        }
-
-        // Envia os dados via SDK
-        await window.contactAPI.submitContactForm(formData);
-
-        // Sucesso: mostra mensagem de sucesso
-        if (formSuccess && form) {
-            form.style.display = 'none';
-            formSuccess.classList.add('active');
-
-            // Reset form and hide success message after 5 seconds
-            setTimeout(() => {
-                form.style.display = 'block';
-                formSuccess.classList.remove('active');
-                form.reset();
-            }, 5000);
-        }
-    } catch (error) {
-        console.error('Erro ao enviar formulário:', error);
-
-        // Mostra mensagem de erro da aplicação
-        if (formError && form && errorMessage) {
-            // Mensagem personalizada baseada no tipo de erro
-            let errorText = 'Por favor, tente novamente ou entre em contato diretamente pelo telefone/WhatsApp.';
-
-            if (error.message && error.message.includes('API de contato')) {
-                errorText = 'Erro de configuração. Por favor, recarregue a página e tente novamente.';
-            } else if (error.message && error.message.includes('Campos obrigatórios')) {
-                errorText = 'Por favor, preencha todos os campos obrigatórios.';
-            } else if (error.message && error.message.includes('network') || error.message && error.message.includes('fetch')) {
-                errorText = 'Erro de conexão. Verifique sua internet e tente novamente.';
+            // Verifica se a API está disponível
+            if (!window.contactAPI || !window.contactAPI.submitContactForm) {
+                throw new Error('API de contato não está disponível. Verifique se contact-supabase.js está carregado.');
             }
 
-            errorMessage.textContent = errorText;
-            form.style.display = 'none';
-            formError.classList.add('active');
+            // Envia os dados via SDK
+            await window.contactAPI.submitContactForm(formData);
 
-            // Esconde mensagem de erro e mostra formulário novamente após 8 segundos
-            setTimeout(() => {
-                form.style.display = 'block';
-                formError.classList.remove('active');
-            }, 8000);
-        }
+            // Sucesso: mostra mensagem de sucesso
+            if (formSuccess) {
+                form.style.display = 'none';
+                formSuccess.classList.remove('hidden');
+                setTimeout(() => {
+                    formSuccess.classList.add('active', 'opacity-100');
+                    formSuccess.classList.remove('opacity-0');
+                }, 10);
 
-        // Reabilita o botão
-        if (submitButton) {
-            submitButton.disabled = false;
-            submitButton.textContent = 'Enviar mensagem';
+                // Reset form and hide success message after 7 seconds
+                setTimeout(() => {
+                    form.style.display = 'block';
+                    formSuccess.classList.remove('active', 'opacity-100');
+                    formSuccess.classList.add('hidden', 'opacity-0');
+                    form.reset();
+                }, 7000);
+            }
+        } catch (error) {
+            console.error('Erro ao enviar formulário:', error);
+
+            // Mostra mensagem de erro da aplicação
+            if (formError && errorMessage) {
+                let errorText = 'Por favor, tente novamente ou entre em contato diretamente pelo telefone/WhatsApp.';
+
+                if (error.message && error.message.includes('API de contato')) {
+                    errorText = 'Erro de configuração. Por favor, recarregue a página e tente novamente.';
+                } else if (error.message && error.message.includes('Campos obrigatórios')) {
+                    errorText = 'Por favor, preencha todos os campos obrigatórios corretamente.';
+                } else if (error.message && error.message.includes('Conteúdo insuficiente')) {
+                    errorText = 'Por favor, verifique se o nome e a mensagem estão completos (mínimo de 5 caracteres na mensagem).';
+                }
+
+                errorMessage.textContent = errorText;
+                form.style.display = 'none';
+                formError.classList.remove('hidden');
+                setTimeout(() => {
+                    formError.classList.add('active', 'opacity-100');
+                    formError.classList.remove('opacity-0');
+                }, 10);
+
+                // Esconde mensagem de erro e mostra formulário novamente após 8 segundos
+                setTimeout(() => {
+                    form.style.display = 'block';
+                    formError.classList.remove('active', 'opacity-100');
+                    formError.classList.add('hidden', 'opacity-0');
+                }, 8000);
+            }
+        } finally {
+            // Reabilita o botão
+            if (submitButton) {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Enviar mensagem';
+            }
         }
     }
-}
+}

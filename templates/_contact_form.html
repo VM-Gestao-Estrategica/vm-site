@@ -1,0 +1,72 @@
+<form class="contact-form" id="contactForm" tool-name="enviar_lead_consultoria" tool-description="Envia dados para análise e consultoria estratégica de passivo empresarial.">
+    <div class="form-group mb-4">
+        <label for="nome" class="sr-only">Nome completo</label>
+        <input type="text" id="nome" name="nome" placeholder="Nome completo *"
+            tool-description="Nome completo do responsável pela empresa" required
+            class="w-full p-4 bg-slate-50 border border-slate-200 outline-none focus:border-azul-acao focus:bg-white transition-all">
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div class="form-group">
+            <label for="email" class="sr-only">E-mail</label>
+            <input type="email" id="email" name="email" placeholder="E-mail *"
+                tool-description="E-mail corporativo para contato técnico" required
+                class="w-full p-4 bg-slate-50 border border-slate-200 outline-none focus:border-azul-acao focus:bg-white transition-all">
+        </div>
+        <div class="form-group">
+            <label for="telefone" class="sr-only">Telefone</label>
+            <input type="tel" id="telefone" name="telefone" placeholder="Telefone *"
+                tool-description="WhatsApp ou telefone para contato direto"
+                data-agent-hint="Inclua o DDD" maxlength="15" required
+                class="w-full p-4 bg-slate-50 border border-slate-200 outline-none focus:border-azul-acao focus:bg-white transition-all">
+        </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div class="form-group">
+            <label for="empresa" class="sr-only">Empresa</label>
+            <input type="text" id="empresa" name="empresa" placeholder="Empresa"
+                tool-description="Nome da empresa para análise de passivo"
+                class="w-full p-4 bg-slate-50 border border-slate-200 outline-none focus:border-azul-acao focus:bg-white transition-all">
+        </div>
+        <div class="form-group">
+            <label for="assunto" class="sr-only">Assunto</label>
+            <select id="assunto" name="assunto" tool-description="Tema central da consultoria solicitada" required
+                class="w-full p-4 bg-slate-50 border border-slate-200 outline-none focus:border-azul-acao focus:bg-white transition-all appearance-none cursor-pointer">
+                <option value="" disabled selected>Assunto *</option>
+                <option value="tributario">Gestão Tributária</option>
+                <option value="bancario">Gestão Bancária</option>
+                <option value="preventivo">Consultoria Preventiva</option>
+                <option value="outro">Outro/Geral</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group mb-6">
+        <label for="mensagem" class="sr-only">Mensagem</label>
+        <textarea id="mensagem" name="mensagem" rows="4" placeholder="Mensagem *"
+            tool-description="Detalhes adicionais sobre a situação da empresa" required
+            class="w-full p-4 bg-slate-50 border border-slate-200 outline-none focus:border-azul-acao focus:bg-white transition-all"></textarea>
+    </div>
+    <button type="submit" class="btn-primary w-full py-5 font-bold uppercase tracking-widest text-sm shadow-xl hover:shadow-blue-500/20 active:scale-95 transition-all" 
+        tool-action="Envia lead para avaliação estratégica de passivo">Enviar mensagem</button>
+</form>
+
+<div class="form-success hidden opacity-0 transition-opacity duration-500" id="formSuccess">
+    <div class="text-center py-8">
+        <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+        </div>
+        <h3 class="text-xl font-bold text-slate-800 mb-2">Mensagem Enviada!</h3>
+        <p class="text-slate-500 text-sm">Nossos técnicos entrarão em contato em breve.</p>
+        <button onclick="window.location.reload()" class="mt-4 text-azul-acao font-semibold hover:underline">Enviar outra</button>
+    </div>
+</div>
+
+<div class="form-error hidden opacity-0 transition-opacity duration-500" id="formError">
+    <div class="text-center py-8">
+        <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </div>
+        <h3 class="text-xl font-bold text-slate-800 mb-2">Erro no Envio</h3>
+        <p id="errorMessage" class="text-slate-500 text-sm">Tente novamente mais tarde.</p>
+        <button onclick="window.location.reload()" class="mt-4 text-azul-acao font-semibold hover:underline">Tentar novamente</button>
+    </div>
+</div>

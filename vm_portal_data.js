@@ -130,6 +130,19 @@ const dadosGrupoVM = {
       numero: "51993917403",
       formatado: "(51) 99391-7403"
     }
+  },
+
+  // Paleta de Cores Brand
+  cores: {
+    principal: "#779be8", // Azul da Logo
+    variacoes: {
+        base: "#769ae7",
+        escuro: "#5276c6",
+        claro: "#96b2e4",
+        acao: "#789feb",
+        suave: "#c7d6f0",
+        medio: "#6e8edb"
+    }
   }
 };
 

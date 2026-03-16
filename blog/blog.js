@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             <div class="blog-row-content">
                 <span class="section-tag">${categoryName}</span>
                 <h3>${post.titulo}</h3>
-                <p class="excerpt">${post.resumo}</p>
+                <p class="excerpt">${post.resumo || ''}</p>
                 <div class="read-more">
                     Ler artigo completo
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
